@@ -301,17 +301,17 @@ footer .logo-svg{height:38px}
 .cyc-logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:23px;fill:var(--muted)}
 .cyc-slogan{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:38px;fill:var(--accent)}
 
+/* ============ LAUF-LINIE ZUM ABSCHLUSS-CTA ============ */
 /* ============ ABSCHLUSS-CTA ============ */
 .cta-final{padding:110px 0 20px;text-align:center;position:relative}
-.cta-final::before{content:"";position:absolute;top:0;left:50%;width:2.5px;margin-left:-1.25px;height:86px;background:linear-gradient(var(--line),var(--accent-3))}
 .cta-final h2{font-size:clamp(1.9rem,4vw,2.7rem);max-width:700px;margin:0 auto 16px;position:relative;padding:26px 34px;border:1px solid transparent;border-radius:18px;transition:border-color .8s}
 .cta-final h2.in{border-color:var(--accent-3);animation:ctalight 2.4s ease-in-out infinite .6s}
 @keyframes ctalight{0%,100%{box-shadow:0 0 14px var(--glow)}50%{box-shadow:0 0 40px var(--glow)}}
-#sparkline{position:absolute;width:2.5px;transform:translateX(-50%);z-index:-1}
-#sparkline .seg{position:absolute;left:0;width:100%;background:var(--line)}
-#sparkline .seg .fill{position:absolute;left:0;width:100%;height:0;background:var(--accent-2)}
-#sparkdot{position:fixed;left:0;top:0;width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 16px var(--glow);pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .3s;z-index:-1}
-@media (prefers-reduced-motion:reduce){#sparkdot{display:none}}
+/* Lauf-Linie unterhalb der Bildmarke – derselbe Aufbau wie .jtrack/.jprog oben: */
+.spine{position:relative;max-width:1080px;margin:0 auto;padding:0 24px}
+.spine-track{position:absolute;top:0;top:0;left:50%;width:2.5px;margin-left:-1.25px;background:var(--line);z-index:-1}
+.spine-prog{position:absolute;top:0;left:0;width:100%;height:0%;background:var(--accent-2);transition:height .1s linear}
+.spine-prog::after{content:"";position:absolute;bottom:-4px;left:-2.75px;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--glow)}
 @media (prefers-reduced-motion:reduce){.journey-end.active .node-ball,.cta-final h2.in{animation:none}}
 .cta-final p{color:var(--muted);margin-bottom:32px}
 .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
@@ -617,6 +617,10 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
   </div>
 </section>
 
+<!-- ==================== LAUF-LINIE ZUM ABSCHLUSS-CTA ==================== -->
+<div class="spine" id="spine" aria-hidden="true">
+<div class="spine-track"><div class="spine-prog" id="spine-prog"></div></div>
+
 <!-- ==================== WIE ICH DIR HELFE ==================== -->
 <section class="hilfe" id="hilfe">
   <div class="wrap">
@@ -810,6 +814,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
     </div>
   </div>
 </section>
+</div>
 
 <!-- ==================== ANGEBOTE ==================== -->
 <section class="offers-section" id="angebote">
@@ -910,6 +915,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
     </div>
   </div>
 </section>
+</div>
 
 <!-- ==================== NEWSLETTER ==================== -->
 <section class="newsletter" id="newsletter">
@@ -978,78 +984,20 @@ document.getElementById('theme-toggle').addEventListener('click', ()=>{
 });
 
 /* ---------- Linie bis zum Abschluss-CTA ---------- */
-const spark = document.createElement('div');
-spark.id = 'sparkline';
-document.body.appendChild(spark);
-const sparkDot = document.createElement('div');
-sparkDot.id = 'sparkdot';
-document.body.appendChild(sparkDot);
-function collectBlocks(){
-  const blocks = [];
-  document.querySelectorAll('section .wrap *, footer .foot-grid *').forEach(el => {
-    if(spark.contains(el)) return;
-    const r = el.getBoundingClientRect();
-    if(r.width < 80 || r.height < 28) return;
-    blocks.push({top: r.top + scrollY, bottom: r.bottom + scrollY});
-  });
-  blocks.sort((p, q) => p.top - q.top);
-  const merged = [];
-  blocks.forEach(b => {
-    const last = merged[merged.length - 1];
-    if(last && b.top <= last.bottom + 24) last.bottom = Math.max(last.bottom, b.bottom);
-    else merged.push({...b});
-  });
-  return merged;
-}
-function updateSpark(){
-  const end = document.querySelector('.journey-end');
+const spine = document.getElementById('spine');
+const spineProg = document.getElementById('spine-prog');
+const spineTrack = spine.querySelector('.spine-track');
+function updateSpine(){
   const head = document.querySelector('.cta-final h2');
-  const hr = head.getBoundingClientRect();
-  const a = end.getBoundingClientRect().bottom + scrollY - 6;
-  const b = hr.top + scrollY;
-  spark.innerHTML = '';
-  if(b <= a) return;
-  spark.style.top = a + 'px';
-  spark.style.height = (b - a) + 'px';
-  spark.style.left = (hr.left + hr.width / 2 + scrollX) + 'px';
-  const blocked = collectBlocks().filter(bl => bl.bottom > a && bl.top < b);
-  let cursor = a;
-  const segs = [];
-  blocked.forEach(bl => {
-    const s = bl.top - 18, e = bl.bottom + 18;
-    if(s > cursor) segs.push([cursor, Math.min(s, b)]);
-    cursor = Math.max(cursor, e);
-  });
-  if(cursor < b) segs.push([cursor, b]);
-  segs.forEach(([s, e]) => {
-    if(e - s < 4) return;
-    const d = document.createElement('div');
-    d.className = 'seg';
-    d.style.top = (s - a) + 'px';
-    d.style.height = (e - s) + 'px';
-    const f = document.createElement('div');
-    f.className = 'fill';
-    d.appendChild(f);
-    spark.appendChild(d);
-  });
-}
-function placeSparkDot(){
-  const r = spark.getBoundingClientRect();
+  const end = spine.getBoundingClientRect().top + scrollY;
+  const headY = head.getBoundingClientRect().top + scrollY;
+  spineTrack.style.height = Math.max(0, headY - end) + 'px';
   const focus = innerHeight * 0.55;
-  const p = Math.min(Math.max((focus - r.top) / r.height, 0), 1);
-  sparkDot.style.left = (r.left + r.width / 2) + 'px';
-  sparkDot.style.top = (r.top + r.height * p) + 'px';
-  sparkDot.style.opacity = (p > 0.01 && p < 0.99) ? 1 : 0;
-  const dotY = r.top + r.height * p;
-  spark.querySelectorAll('.seg').forEach(seg => {
-    const sr = seg.getBoundingClientRect();
-    const fill = seg.querySelector('.fill');
-    const overlap = Math.min(dotY, sr.bottom) - sr.top;
-    fill.style.height = Math.max(0, overlap) + 'px';
-  });
+  const p = Math.min(Math.max((focus - spine.getBoundingClientRect().top) / Math.max(1, headY - end), 0), 1);
+  spineProg.style.height = (p * 100) + '%';
 }
-addEventListener('load', () => { updateSpark(); placeSparkDot(); });
-addEventListener('resize', () => { updateSpark(); placeSparkDot(); });
+addEventListener('load', updateSpine);
+addEventListener('resize', updateSpine);
 
 /* ---------- Navigation ---------- */
 const nav = document.getElementById('nav');
@@ -1092,8 +1040,8 @@ function updateLine(){
   const p = Math.min(Math.max((focus - r.top) / r.height, 0), 1);
   jProg.style.height = (p * 100) + '%';
 }
-addEventListener('scroll', ()=> requestAnimationFrame(()=>{ updateLine(); placeSparkDot(); }), {passive:true});
-addEventListener('resize', updateLine);
+addEventListener('scroll', ()=> requestAnimationFrame(updateLine), {passive:true});
+addEventListener('resize', ()=>{ updateLine(); updateSpine(); });
 updateLine();
 
 /* ---------- Zähler ---------- */
