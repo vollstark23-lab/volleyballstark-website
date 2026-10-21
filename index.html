@@ -294,7 +294,8 @@ footer .logo-svg{height:38px}
 @keyframes ctalight{0%,100%{box-shadow:0 0 14px var(--glow)}50%{box-shadow:0 0 40px var(--glow)}}
 #sparkline{position:absolute;width:2.5px;transform:translateX(-50%);z-index:-1}
 #sparkline .seg{position:absolute;left:0;width:100%;background:var(--line)}
-#sparkdot{position:fixed;left:0;top:0;width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 16px var(--glow);pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .3s;z-index:1}
+#sparkline .seg .fill{position:absolute;left:0;width:100%;height:0;background:var(--accent-2)}
+#sparkdot{position:fixed;left:0;top:0;width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 16px var(--glow);pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .3s;z-index:-1}
 @media (prefers-reduced-motion:reduce){#sparkdot{display:none}}
 @media (prefers-reduced-motion:reduce){.journey-end.active .node-ball,.cta-final h2.in{animation:none}}
 .cta-final p{color:var(--muted);margin-bottom:32px}
@@ -955,6 +956,16 @@ const sparkDot = document.createElement('div');
 sparkDot.id = 'sparkdot';
 document.body.appendChild(sparkDot);
 const TEXTISH = new Set(['P','H1','H2','H3','H4','H5','H6','LI','SPAN','A','BUTTON','STRONG','EM','B','I','SVG','IMG','TABLE','UL','OL','FIGURE']);
+function blockedAt(x, y){
+  const els = document.elementsFromPoint(x, y);
+  const top = els.find(el => !spark.contains(el) && el !== sparkDot && !sparkDot.contains(el));
+  if(!top) return false;
+  if(TEXTISH.has(top.tagName)) return true;
+  const cs = getComputedStyle(top);
+  if(cs.backgroundColor && cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent') return true;
+  if(parseFloat(cs.borderTopWidth) > 0 || parseFloat(cs.borderLeftWidth) > 0) return true;
+  return false;
+}
 function updateSpark(){
   const end = document.querySelector('.journey-end');
   const head = document.querySelector('.cta-final h2');
@@ -969,9 +980,7 @@ function updateSpark(){
   let segStart = null;
   const segs = [];
   for(let y = a; y <= b; y += 6){
-    const els = document.elementsFromPoint(cx, y - scrollY);
-    const top = els.find(el => !spark.contains(el) && el !== sparkDot && !sparkDot.contains(el));
-    const free = !top || !TEXTISH.has(top.tagName);
+    const free = !blockedAt(cx, y - scrollY);
     if(free && segStart === null) segStart = y;
     if((!free || y + 6 > b) && segStart !== null){
       segs.push([segStart, Math.min(y, b)]);
@@ -983,6 +992,9 @@ function updateSpark(){
     d.className = 'seg';
     d.style.top = (s - a) + 'px';
     d.style.height = Math.max(2, e - s) + 'px';
+    const f = document.createElement('div');
+    f.className = 'fill';
+    d.appendChild(f);
     spark.appendChild(d);
   });
 }
@@ -993,6 +1005,13 @@ function placeSparkDot(){
   sparkDot.style.left = (r.left + r.width / 2) + 'px';
   sparkDot.style.top = (r.top + r.height * p) + 'px';
   sparkDot.style.opacity = (p > 0.01 && p < 0.99) ? 1 : 0;
+  const dotY = r.top + r.height * p;
+  spark.querySelectorAll('.seg').forEach(seg => {
+    const sr = seg.getBoundingClientRect();
+    const fill = seg.querySelector('.fill');
+    const overlap = Math.min(dotY, sr.bottom) - sr.top;
+    fill.style.height = Math.max(0, overlap) + 'px';
+  });
 }
 addEventListener('load', () => { updateSpark(); placeSparkDot(); });
 addEventListener('resize', () => { updateSpark(); placeSparkDot(); });
