@@ -234,7 +234,10 @@ footer .logo-svg{height:38px}
 .panel-num{font-family:'Bricolage Grotesque',sans-serif;font-size:3.4rem;font-weight:800;line-height:1;display:block;margin-bottom:10px;color:transparent;-webkit-text-stroke:2px var(--accent-3)}
 .panel-text h3{font-size:clamp(1.35rem,2.2vw,1.7rem);margin-bottom:12px}
 .panel-text p{color:var(--muted)}
-.panel-img{aspect-ratio:4/3;border:1.5px dashed var(--line);border-radius:18px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center;padding:20px}
+.panel-img{aspect-ratio:4/3;border:1.5px solid var(--stroke);border-radius:18px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center;padding:0;overflow:hidden;position:relative}
+.panel-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.panel:hover .panel-img img{transform:scale(1.04)}
+.panel-img::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.18));pointer-events:none}
 .panel-img svg{width:42px;height:42px;color:var(--accent);opacity:.55}
 .panel-img p{font-size:.85rem}
 .panel-img p span{font-size:.75rem;opacity:.7;display:block}
@@ -629,7 +632,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
         <h3>Isometrie</h3>
         <p>Kraft ohne Gelenkstress: Isometrisches Training baut gezielt Kraft auf, ohne die Gelenke zu belasten – und wirkt gerade bei Schmerzen und Reizungen im Sehnenbereich oft spürbar lindernd. Der kontrollierte Weg zurück zur vollen Belastung.</p>
       </div>
-      <div class="panel-img"><i data-lucide="dumbbell"></i><p>Hier Bild einfügen<br><span>z. B. 800 × 600 px</span></p></div>
+      <div class="panel-img"><img src="img/isometrie.webp" alt="Isometrisches Training: Übung an der Wand mit Volleyball im schlichten Innenraum" loading="lazy" width="800" height="600"></div>
     </div>
 
     <div class="panel flip reveal">
@@ -638,7 +641,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
         <h3>Training des Nervensystems</h3>
         <p>Dein Nervensystem steuert Spannung, Koordination und Regeneration. Ist es im Alarmmodus, schränkt dein Körper dich ein. Gezieltes Training holt es zurück in den sicheren Modus – für Entspannung, schnellere Erholung und flüssige Bewegung.</p>
       </div>
-      <div class="panel-img"><i data-lucide="brain"></i><p>Hier Bild einfügen<br><span>z. B. 800 × 600 px</span></p></div>
+      <div class="panel-img"><img src="img/nervensystem.webp" alt="Ruhige, fokussierte Übung mit Ball: Training des Nervensystems" loading="lazy" width="800" height="600"></div>
     </div>
 
     <div class="panel reveal">
@@ -647,7 +650,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
         <h3>Faszientraining &amp; Mindset</h3>
         <p>Faszien durchziehen deinen ganzen Körper – sie brauchen Reize, nicht nur Ruhe, um elastisch und schmerzfrei zu bleiben. Kombiniert mit Mindset-Arbeit baust du echtes Körpervertrauen auf, statt Verletzungsangst.</p>
       </div>
-      <div class="panel-img"><i data-lucide="waves"></i><p>Hier Bild einfügen<br><span>z. B. 800 × 600 px</span></p></div>
+      <div class="panel-img"><img src="img/faszien.webp" alt="Ausfallschritt mit Medizinball: Faszientraining" loading="lazy" width="800" height="600"></div>
     </div>
 
     <div class="panel flip reveal">
@@ -656,7 +659,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
         <h3>Techniktraining &amp; Analyse</h3>
         <p>Volleyballtypische Verletzungen entstehen oft in der Technik – etwa beim „hohen Ellenbogen“ im Angriff. Ich analysiere deine Bewegungsmuster volleyballspezifisch und korrigiere an der Ursache, nicht am Symptom.</p>
       </div>
-      <div class="panel-img"><i data-lucide="target"></i><p>Hier Bild einfügen<br><span>z. B. 800 × 600 px</span></p></div>
+      <div class="panel-img"><img src="img/technik.webp" alt="Volleyball-Angriffsschlag über Kopf: Techniktraining im Spiel" loading="lazy" width="800" height="600"></div>
     </div>
   </div>
 </section>
