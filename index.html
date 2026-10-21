@@ -984,43 +984,49 @@ document.body.appendChild(spark);
 const sparkDot = document.createElement('div');
 sparkDot.id = 'sparkdot';
 document.body.appendChild(sparkDot);
-const TEXTISH = new Set(['P','H1','H2','H3','H4','H5','H6','LI','SPAN','A','BUTTON','STRONG','EM','B','I','SVG','IMG','TABLE','UL','OL','FIGURE']);
-function blockedAt(x, y){
-  const els = document.elementsFromPoint(x, y);
-  const top = els.find(el => !spark.contains(el) && el !== sparkDot && !sparkDot.contains(el));
-  if(!top) return false;
-  if(TEXTISH.has(top.tagName)) return true;
-  const cs = getComputedStyle(top);
-  if(cs.backgroundColor && cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent') return true;
-  if(parseFloat(cs.borderTopWidth) > 0 || parseFloat(cs.borderLeftWidth) > 0) return true;
-  return false;
+function collectBlocks(){
+  const blocks = [];
+  document.querySelectorAll('section .wrap *, footer .foot-grid *').forEach(el => {
+    if(spark.contains(el)) return;
+    const r = el.getBoundingClientRect();
+    if(r.width < 80 || r.height < 28) return;
+    blocks.push({top: r.top + scrollY, bottom: r.bottom + scrollY});
+  });
+  blocks.sort((p, q) => p.top - q.top);
+  const merged = [];
+  blocks.forEach(b => {
+    const last = merged[merged.length - 1];
+    if(last && b.top <= last.bottom + 24) last.bottom = Math.max(last.bottom, b.bottom);
+    else merged.push({...b});
+  });
+  return merged;
 }
 function updateSpark(){
   const end = document.querySelector('.journey-end');
   const head = document.querySelector('.cta-final h2');
+  const hr = head.getBoundingClientRect();
   const a = end.getBoundingClientRect().bottom + scrollY - 6;
-  const b = head.getBoundingClientRect().top + scrollY;
-  const cx = head.getBoundingClientRect().left + head.getBoundingClientRect().width / 2;
+  const b = hr.top + scrollY;
   spark.innerHTML = '';
   if(b <= a) return;
   spark.style.top = a + 'px';
   spark.style.height = (b - a) + 'px';
-  spark.style.left = cx + 'px';
-  let segStart = null;
+  spark.style.left = (hr.left + hr.width / 2 + scrollX) + 'px';
+  const blocked = collectBlocks().filter(bl => bl.bottom > a && bl.top < b);
+  let cursor = a;
   const segs = [];
-  for(let y = a; y <= b; y += 6){
-    const free = !blockedAt(cx, y - scrollY);
-    if(free && segStart === null) segStart = y;
-    if((!free || y + 6 > b) && segStart !== null){
-      segs.push([segStart, Math.min(y, b)]);
-      segStart = null;
-    }
-  }
+  blocked.forEach(bl => {
+    const s = bl.top - 18, e = bl.bottom + 18;
+    if(s > cursor) segs.push([cursor, Math.min(s, b)]);
+    cursor = Math.max(cursor, e);
+  });
+  if(cursor < b) segs.push([cursor, b]);
   segs.forEach(([s, e]) => {
+    if(e - s < 4) return;
     const d = document.createElement('div');
     d.className = 'seg';
     d.style.top = (s - a) + 'px';
-    d.style.height = Math.max(2, e - s) + 'px';
+    d.style.height = (e - s) + 'px';
     const f = document.createElement('div');
     f.className = 'fill';
     d.appendChild(f);
