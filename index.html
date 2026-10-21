@@ -292,8 +292,10 @@ footer .logo-svg{height:38px}
 .cta-final h2{font-size:clamp(1.9rem,4vw,2.7rem);max-width:700px;margin:0 auto 16px;position:relative;padding:26px 34px;border:1px solid transparent;border-radius:18px;transition:border-color .8s}
 .cta-final h2.in{border-color:var(--accent-3);animation:ctalight 2.4s ease-in-out infinite .6s}
 @keyframes ctalight{0%,100%{box-shadow:0 0 14px var(--glow)}50%{box-shadow:0 0 40px var(--glow)}}
-#sparkline{position:absolute;width:2.5px;background:linear-gradient(var(--line),var(--accent-3));transform:translateX(-50%);z-index:-1;opacity:.9}
-#sparkline::after{content:"";position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--glow)}
+#sparkline{position:absolute;width:2.5px;transform:translateX(-50%);z-index:-1}
+#sparkline .seg{position:absolute;left:0;width:100%;background:var(--line)}
+#sparkdot{position:fixed;left:0;top:0;width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 16px var(--glow);pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .3s;z-index:1}
+@media (prefers-reduced-motion:reduce){#sparkdot{display:none}}
 @media (prefers-reduced-motion:reduce){.journey-end.active .node-ball,.cta-final h2.in{animation:none}}
 .cta-final p{color:var(--muted);margin-bottom:32px}
 .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
@@ -458,9 +460,9 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
         <path id="fl2" d="M87.3 176.3 C87.3 300.0 180 360.0 180 470"/>
         <path id="fl3" d="M206.4 246.4 C206.4 330.0 180 405.0 180 470"/>
         <path id="fl4" d="M196.5 429.1 C196.5 448.0 180 461.0 180 470"/>
-        <path id="fl5" d="M62.0 178.0 C62.0 300.0 175 365.0 180 470"/>
-        <path id="fl6" d="M118.0 438.0 C118.0 452.0 175 462.0 180 470"/>
-        <path id="fl7" d="M242.0 395.0 C242.0 425.0 186 458.0 180 470"/>
+        <path id="fl5" d="M53.8 403.1 C53.8 428.0 174 455.0 180 470"/>
+        <path id="fl6" d="M263.2 90.3 C263.2 240.0 181 380.0 180 470"/>
+        <path id="fl7" d="M341.1 36.5 C341.1 200.0 183 370.0 180 470"/>
       </g>
       <!-- Lichtimpulse, die entlang der Trichterlinien nach unten wandern -->
       <g>
@@ -507,15 +509,15 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
         <circle class="glow" cx="196.5" cy="423.1" r="30" style="animation-delay:2.1s"/>
         <circle class="mring" cx="196.5" cy="423.1" r="15" style="animation-delay:1.8s"/>
         <circle class="mkdot" cx="196.5" cy="423.1" r="4.5"/>
-        <circle class="glow" cx="62.0" cy="172.0" r="30" style="animation-delay:2.45s"/>
-        <circle class="mring" cx="62.0" cy="172.0" r="15" style="animation-delay:.3s"/>
-        <circle class="mkdot" cx="62.0" cy="172.0" r="4.5"/>
-        <circle class="glow" cx="118.0" cy="432.0" r="30" style="animation-delay:1.05s"/>
-        <circle class="mring" cx="118.0" cy="432.0" r="15" style="animation-delay:.9s"/>
-        <circle class="mkdot" cx="118.0" cy="432.0" r="4.5"/>
-        <circle class="glow" cx="242.0" cy="389.0" r="30" style="animation-delay:1.75s"/>
-        <circle class="mring" cx="242.0" cy="389.0" r="15" style="animation-delay:1.5s"/>
-        <circle class="mkdot" cx="242.0" cy="389.0" r="4.5"/>
+        <circle class="glow" cx="53.8" cy="403.1" r="30" style="animation-delay:1.05s"/>
+        <circle class="mring" cx="53.8" cy="403.1" r="15" style="animation-delay:.9s"/>
+        <circle class="mkdot" cx="53.8" cy="403.1" r="4.5"/>
+        <circle class="glow" cx="263.2" cy="90.3" r="30" style="animation-delay:1.75s"/>
+        <circle class="mring" cx="263.2" cy="90.3" r="15" style="animation-delay:1.5s"/>
+        <circle class="mkdot" cx="263.2" cy="90.3" r="4.5"/>
+        <circle class="glow" cx="341.1" cy="36.5" r="30" style="animation-delay:2.45s"/>
+        <circle class="mring" cx="341.1" cy="36.5" r="15" style="animation-delay:2.3s"/>
+        <circle class="mkdot" cx="341.1" cy="36.5" r="4.5"/>
       </g>
       <!-- Sammelpunkt + Übergang in die Seiten-Linie -->
       <circle class="jjoin" cx="180" cy="470" r="6"/>
@@ -949,18 +951,51 @@ document.getElementById('theme-toggle').addEventListener('click', ()=>{
 const spark = document.createElement('div');
 spark.id = 'sparkline';
 document.body.appendChild(spark);
+const sparkDot = document.createElement('div');
+sparkDot.id = 'sparkdot';
+document.body.appendChild(sparkDot);
+const TEXTISH = new Set(['P','H1','H2','H3','H4','H5','H6','LI','SPAN','A','BUTTON','STRONG','EM','B','I','SVG','IMG','TABLE','UL','OL','FIGURE']);
 function updateSpark(){
   const end = document.querySelector('.journey-end');
   const head = document.querySelector('.cta-final h2');
   const a = end.getBoundingClientRect().bottom + scrollY - 6;
-  const hr = head.getBoundingClientRect();
-  const b = hr.top + scrollY;
+  const b = head.getBoundingClientRect().top + scrollY;
+  const cx = head.getBoundingClientRect().left + head.getBoundingClientRect().width / 2;
+  spark.innerHTML = '';
+  if(b <= a) return;
   spark.style.top = a + 'px';
-  spark.style.height = Math.max(0, b - a) + "px";
-  spark.style.left = (hr.left + hr.width / 2 + scrollX) + 'px';
+  spark.style.height = (b - a) + 'px';
+  spark.style.left = cx + 'px';
+  let segStart = null;
+  const segs = [];
+  for(let y = a; y <= b; y += 6){
+    const els = document.elementsFromPoint(cx, y - scrollY);
+    const top = els.find(el => !spark.contains(el) && el !== sparkDot && !sparkDot.contains(el));
+    const free = !top || !TEXTISH.has(top.tagName);
+    if(free && segStart === null) segStart = y;
+    if((!free || y + 6 > b) && segStart !== null){
+      segs.push([segStart, Math.min(y, b)]);
+      segStart = null;
+    }
+  }
+  segs.forEach(([s, e]) => {
+    const d = document.createElement('div');
+    d.className = 'seg';
+    d.style.top = (s - a) + 'px';
+    d.style.height = Math.max(2, e - s) + 'px';
+    spark.appendChild(d);
+  });
 }
-addEventListener('load', updateSpark);
-addEventListener('resize', updateSpark);
+function placeSparkDot(){
+  const r = spark.getBoundingClientRect();
+  const focus = innerHeight * 0.55;
+  const p = Math.min(Math.max((focus - r.top) / r.height, 0), 1);
+  sparkDot.style.left = (r.left + r.width / 2) + 'px';
+  sparkDot.style.top = (r.top + r.height * p) + 'px';
+  sparkDot.style.opacity = (p > 0.01 && p < 0.99) ? 1 : 0;
+}
+addEventListener('load', () => { updateSpark(); placeSparkDot(); });
+addEventListener('resize', () => { updateSpark(); placeSparkDot(); });
 
 /* ---------- Navigation ---------- */
 const nav = document.getElementById('nav');
@@ -1003,7 +1038,7 @@ function updateLine(){
   const p = Math.min(Math.max((focus - r.top) / r.height, 0), 1);
   jProg.style.height = (p * 100) + '%';
 }
-addEventListener('scroll', ()=> requestAnimationFrame(updateLine), {passive:true});
+addEventListener('scroll', ()=> requestAnimationFrame(()=>{ updateLine(); placeSparkDot(); }), {passive:true});
 addEventListener('resize', updateLine);
 updateLine();
 
