@@ -78,15 +78,13 @@ body{
 
 /* ============ VOLLEYBALL-NETZ IM HINTERGRUND ============ */
 .net-bg{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;opacity:var(--net-op,.32)}
-.net-svg{position:absolute;left:50%;top:50%;width:170vw;max-width:1700px;height:190vh;transform:translate(-50%,-50%) perspective(1300px) rotateX(58deg) translateZ(-160px);transform-origin:center;will-change:transform}
+.net-svg{position:absolute;inset:-6% -12%;width:124%;height:112%;transform:rotate(-7deg) skewY(-9deg);transform-origin:center;animation:netdrift 46s linear infinite;will-change:transform}
 .net-svg .nmesh{fill:none;stroke:var(--net-ink);stroke-width:1.4}
-.net-svg .nmesh path{transform-box:fill-box;transform-origin:center;animation:netwave 9s ease-in-out infinite}
-.net-svg .nmesh path:nth-child(2){animation-duration:11s;animation-delay:-3s}
-@keyframes netwave{0%,100%{transform:skewX(0deg) scaleY(1)}30%{transform:skewX(.8deg) scaleY(1.006)}65%{transform:skewX(-.7deg) scaleY(.995)}}
+@keyframes netdrift{0%{transform:rotate(-7deg) skewY(-9deg) translateY(0)}100%{transform:rotate(-7deg) skewY(-9deg) translateY(-140px)}}
 .net-svg .nband{fill:var(--net-band);opacity:.5}
 .net-svg .ncord{stroke:var(--net-band);stroke-width:3;opacity:.45}
 .net-shade{position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 42%,transparent 30%,var(--bg) 92%)}
-@media (prefers-reduced-motion:reduce){.net-svg{transform:translate(-50%,-50%) perspective(1300px) rotateX(58deg) translateZ(-160px)}}
+@media (prefers-reduced-motion:reduce){.net-svg{transform:rotate(-7deg) skewY(-9deg);animation:none}}
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
   background:radial-gradient(1100px 500px at 85% -5%, var(--amb1), transparent 70%),
@@ -387,7 +385,6 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal,.pill,.myth-card,.cnode{opacity:1;transform:none}
-  .net-svg .nmesh path{animation:none}
 }
 </style>
 </head>
@@ -1044,17 +1041,6 @@ function placeSparkDot(){
 }
 addEventListener('load', () => { updateSpark(); placeSparkDot(); });
 addEventListener('resize', () => { updateSpark(); placeSparkDot(); });
-
-/* ---------- Volleyball-Netz: sanfter Parallax beim Scrollen ---------- */
-const netSvg = document.getElementById('netsvg');
-let netTicking = false;
-function moveNet(){
-  const y = scrollY;
-  const shift = (y * 0.06) % 160;
-  netSvg.style.transform = `translate(-50%, calc(-50% + ${shift}px)) perspective(1300px) rotateX(58deg) translateZ(-160px)`;
-  netTicking = false;
-}
-addEventListener('scroll', ()=>{ if(!netTicking){ netTicking = true; requestAnimationFrame(moveNet); } }, {passive:true});
 
 /* ---------- Navigation ---------- */
 const nav = document.getElementById('nav');
