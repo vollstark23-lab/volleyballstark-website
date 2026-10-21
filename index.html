@@ -28,6 +28,7 @@
   --accent:#4ade80; --accent-2:#22c55e; --accent-3:#16a34a;
   --ink:#eaf5ed; --muted:#a3bfae; --warn:#e08a6d;
   --btn-ink:#04150c;
+  --net-ink:rgba(94,215,141,.5); --net-band:#d8e6dc; --net-op:.32;
   --input-bg:#0a1b12;
   --toast-bg:#123a26;
   --arc:rgba(74,222,128,.45);
@@ -48,6 +49,7 @@ html[data-theme="light"]{
   --stroke:rgba(21,128,61,.16); --line:rgba(21,128,61,.26);
   --accent:#0f7a41; --accent-2:#16a34a; --accent-3:#15803d;
   --ink:#1f2d24; --muted:#5a6a5e; --warn:#b4552f;
+  --net-ink:rgba(21,128,61,.38); --net-band:#1f3a2c; --net-op:.28;
   --btn-ink:#f3f7ee;
   --input-bg:#f9f5ea;
   --toast-bg:#e3dcc7;
@@ -73,6 +75,18 @@ body{
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
   transition:background-color .3s,color .3s;
 }
+
+/* ============ VOLLEYBALL-NETZ IM HINTERGRUND ============ */
+.net-bg{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;opacity:var(--net-op,.32)}
+.net-svg{position:absolute;left:50%;top:50%;width:170vw;max-width:1700px;height:190vh;transform:translate(-50%,-50%) perspective(1300px) rotateX(58deg) translateZ(-160px);transform-origin:center;will-change:transform}
+.net-svg .nmesh{fill:none;stroke:var(--net-ink);stroke-width:1.4}
+.net-svg .nmesh path{transform-box:fill-box;transform-origin:center;animation:netwave 9s ease-in-out infinite}
+.net-svg .nmesh path:nth-child(2){animation-duration:11s;animation-delay:-3s}
+@keyframes netwave{0%,100%{transform:skewX(0deg) scaleY(1)}30%{transform:skewX(.8deg) scaleY(1.006)}65%{transform:skewX(-.7deg) scaleY(.995)}}
+.net-svg .nband{fill:var(--net-band);opacity:.5}
+.net-svg .ncord{stroke:var(--net-band);stroke-width:3;opacity:.45}
+.net-shade{position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 42%,transparent 30%,var(--bg) 92%)}
+@media (prefers-reduced-motion:reduce){.net-svg{transform:translate(-50%,-50%) perspective(1300px) rotateX(58deg) translateZ(-160px)}}
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
   background:radial-gradient(1100px 500px at 85% -5%, var(--amb1), transparent 70%),
@@ -373,10 +387,26 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal,.pill,.myth-card,.cnode{opacity:1;transform:none}
+  .net-svg .nmesh path{animation:none}
 }
 </style>
 </head>
 <body>
+<div class="net-bg" aria-hidden="true">
+  <svg class="net-svg" id="netsvg" viewBox="0 0 2240 1680" preserveAspectRatio="none">
+    <g class="nmesh">
+      <path d="M56 0V1680 M112 0V1680 M168 0V1680 M224 0V1680 M280 0V1680 M336 0V1680 M392 0V1680 M448 0V1680 M504 0V1680 M560 0V1680 M616 0V1680 M672 0V1680 M728 0V1680 M784 0V1680 M840 0V1680 M896 0V1680 M952 0V1680 M1008 0V1680 M1064 0V1680 M1120 0V1680 M1176 0V1680 M1232 0V1680 M1288 0V1680 M1344 0V1680 M1400 0V1680 M1456 0V1680 M1512 0V1680 M1568 0V1680 M1624 0V1680 M1680 0V1680 M1736 0V1680 M1792 0V1680 M1848 0V1680 M1904 0V1680 M1960 0V1680 M2016 0V1680 M2072 0V1680 M2128 0V1680 M2184 0V1680"/>
+      <path d="M0 56H2240 M0 112H2240 M0 168H2240 M0 224H2240 M0 280H2240 M0 336H2240 M0 392H2240 M0 448H2240 M0 504H2240 M0 560H2240 M0 616H2240 M0 672H2240 M0 728H2240 M0 784H2240 M0 840H2240 M0 896H2240 M0 952H2240 M0 1008H2240 M0 1064H2240 M0 1120H2240 M0 1176H2240 M0 1232H2240 M0 1288H2240 M0 1344H2240 M0 1400H2240 M0 1456H2240 M0 1512H2240 M0 1568H2240 M0 1624H2240"/>
+    </g>
+    <g class="ncord">
+      <line x1="0" y1="0" x2="2240" y2="0"/>
+      <line x1="0" y1="1680" x2="2240" y2="1680"/>
+    </g>
+    <rect class="nband" x="0" y="-16" width="2240" height="16"/>
+    <rect class="nband" x="0" y="1680" width="2240" height="16"/>
+  </svg>
+  <div class="net-shade"></div>
+</div>
 
 <!-- ==================== LOGO-SPRITE (Inline-SVG, wechselt automatisch mit dem Theme) ==================== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -1014,6 +1044,17 @@ function placeSparkDot(){
 }
 addEventListener('load', () => { updateSpark(); placeSparkDot(); });
 addEventListener('resize', () => { updateSpark(); placeSparkDot(); });
+
+/* ---------- Volleyball-Netz: sanfter Parallax beim Scrollen ---------- */
+const netSvg = document.getElementById('netsvg');
+let netTicking = false;
+function moveNet(){
+  const y = scrollY;
+  const shift = (y * 0.06) % 160;
+  netSvg.style.transform = `translate(-50%, calc(-50% + ${shift}px)) perspective(1300px) rotateX(58deg) translateZ(-160px)`;
+  netTicking = false;
+}
+addEventListener('scroll', ()=>{ if(!netTicking){ netTicking = true; requestAnimationFrame(moveNet); } }, {passive:true});
 
 /* ---------- Navigation ---------- */
 const nav = document.getElementById('nav');
