@@ -170,13 +170,12 @@ footer .logo-svg{height:38px}
 @keyframes pulse{0%{transform:scale(.55);opacity:.9}70%{transform:scale(2.2);opacity:0}100%{transform:scale(2.2);opacity:0}}
 .mkdot{fill:var(--accent)}
 .jjoin{fill:var(--accent-2)}
-.jjoin-line{stroke:var(--accent-3);stroke-width:2.5;opacity:.85}
+.jjoin-line{stroke:var(--line);stroke-width:2.5}
 @keyframes flowmove{to{stroke-dashoffset:-48}}
 
 .journey-body{position:relative;max-width:1080px;margin:0 auto;padding:0 24px}
-.jtrack{position:absolute;top:0;bottom:29px;left:calc(50% - 1.25px);width:2.5px;background:var(--line);z-index:1}
-.jprog{height:0%;width:100%;background:var(--accent-2);position:relative;transition:height .1s linear}
-.jprog::after{content:"";position:absolute;bottom:-4px;left:-2.75px;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--glow)}
+/* Die Reise-Linie läuft jetzt als EIN Element (.rail) hinter dem gesamten
+   Inhalt – siehe Abschnitt DIE EINE LAUF-LINIE weiter unten. */
 
 .pill-row{display:grid;grid-template-columns:1fr 72px 1fr;align-items:center;margin-bottom:26px}
 .pill{display:inline-flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--stroke);border-radius:999px;padding:11px 20px;font-weight:500;position:relative;z-index:2;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s}
@@ -265,7 +264,7 @@ footer .logo-svg{height:38px}
 
 /* ============ DER UNTERSCHIED ============ */
 .vorteil{padding:110px 0 20px}
-.vs-rows{border:1px solid var(--panel-border);border-radius:18px;overflow:hidden}
+.vs-rows{position:relative;border:1px solid var(--panel-border);border-radius:18px;overflow:hidden}
 .vs-heads{display:grid;grid-template-columns:1fr 1fr}
 .vs-head{display:flex;align-items:center;gap:12px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.05rem;padding:18px 24px}
 .vs-head svg{width:22px;height:22px}
@@ -301,18 +300,33 @@ footer .logo-svg{height:38px}
 .cyc-logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:23px;fill:var(--muted)}
 .cyc-slogan{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:38px;fill:var(--accent)}
 
-/* ============ LAUF-LINIE ZUM ABSCHLUSS-CTA ============ */
+/* ============ DIE EINE LAUF-LINIE (Volleyballer → CTA) ============
+   EIN Element, EIN Mechanismus: .rail liegt als absolutes Element hinter
+   dem gesamten Inhalt (z-index:-1) und läuft in einem Stück vom Sammel-
+   punkt unter dem Volleyballer bis zur CTA-Überschrift. Track + Fill +
+   Leuchtpunkt steuert EINE rAF-gedrosselte JS-Funktion mit gecachter
+   Geometrie (kein Layout-Read pro Scroll-Frame). Opaque Karten verdecken
+   die Linie auf natürliche Weise; zentrierte Überschriften und Tabellen
+   bekommen einen Patch in Seitenfarbe (.rail-patch), das Zyklus-Diagramm
+   bekommt Patches hinter Label und Logo (.cyc-rail-patch) – die Linie
+   fädelt sauber durchs Diagramm, statt Texte zu schneiden.
+   Mobile <820px: Linie komplett aus – keine Fragmente zwischen
+   gestapelten Karten, kein Lauf durch Texte. */
+.rail{position:absolute;top:0;left:50%;width:2.5px;margin-left:-1.25px;background:var(--line);z-index:-1;pointer-events:none}
+.rail-fill{position:absolute;top:0;left:0;width:100%;height:0;background:var(--accent-2)}
+.rail-dot{position:absolute;left:-3.75px;top:0;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--glow);will-change:top}
+.rail-patch-holder{position:relative}
+.rail-patch{position:absolute;left:-40px;right:-40px;top:-10px;bottom:-10px;background:var(--bg);z-index:-1;border-radius:18px}
+.vs-rows .rail-patch{left:0;right:0;top:0;bottom:0;border-radius:17px}
+.cyc-rail-patch{fill:var(--bg)}
+@media(max-width:820px){.rail{display:none}.rail-patch{display:none}}
+@media (prefers-reduced-motion:reduce){.rail-dot{box-shadow:none}}
+
 /* ============ ABSCHLUSS-CTA ============ */
 .cta-final{padding:110px 0 20px;text-align:center;position:relative}
 .cta-final h2{font-size:clamp(1.9rem,4vw,2.7rem);max-width:700px;margin:0 auto 16px;position:relative;padding:26px 34px;border:1px solid transparent;border-radius:18px;transition:border-color .8s}
 .cta-final h2.in{border-color:var(--accent-3);animation:ctalight 2.4s ease-in-out infinite .6s}
 @keyframes ctalight{0%,100%{box-shadow:0 0 14px var(--glow)}50%{box-shadow:0 0 40px var(--glow)}}
-/* Lauf-Linie unterhalb der Bildmarke – derselbe Aufbau wie .jtrack/.jprog oben: */
-.spine{position:relative;max-width:1080px;margin:0 auto;padding:0 24px}
-.spine-track{position:absolute;top:0;left:50%;width:2.5px;margin-left:-1.25px;background:var(--line);z-index:-1}
-.spine-prog{position:absolute;top:0;left:0;width:100%;height:0%;background:var(--accent-2);transition:height .1s linear}
-.spine-prog::after{content:"";position:absolute;bottom:-4px;left:-2.75px;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--glow)}
-@media(max-width:820px){.spine-track{display:none}}
 @media (prefers-reduced-motion:reduce){.journey-end.active .node-ball,.cta-final h2.in{animation:none}}
 .cta-final p{color:var(--muted);margin-bottom:32px}
 .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
@@ -553,14 +567,14 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
         <circle class="mring" cx="341.1" cy="36.5" r="15" style="animation-delay:2.3s"/>
         <circle class="mkdot" cx="341.1" cy="36.5" r="4.5"/>
       </g>
-      <!-- Sammelpunkt + Übergang in die Seiten-Linie -->
+      <!-- Sammelpunkt + Übergang in die Seiten-Linie (SVG-Ende = Linien-Anfang;
+           .rail setzt unterhalb nahtlos fort, gleiche optische Dichte) -->
       <circle class="jjoin" cx="180" cy="470" r="6"/>
-      <path class="jjoin-line" d="M180 470 L180 518"/>
+      <path class="jjoin-line" d="M180 470 L180 520"/>
     </svg>
   </div>
 
   <div class="journey-body" id="journey-body">
-    <div class="jtrack"><div class="jprog" id="jprog"></div></div>
 
     <div class="pill-row row-l"><div class="pill"><i data-lucide="battery-low"></i><span>Kraftverlust</span></div><div class="dot"></div></div>
     <div class="pill-row row-r"><div class="pill"><i data-lucide="zap"></i><span>Stechender Schmerz</span></div><div class="dot"></div></div>
@@ -618,14 +632,21 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
   </div>
 </section>
 
-<!-- ==================== LAUF-LINIE ZUM ABSCHLUSS-CTA ==================== -->
-<div class="spine" id="spine" aria-hidden="true">
-<div class="spine-track"><div class="spine-prog" id="spine-prog"></div></div>
+<!-- ==================== DIE EINE LAUF-LINIE: Volleyballer → Bildmarke → CTA ==================== -->
+<!-- .rail läuft in einem Stück vom Sammelpunkt unter dem Volleyballer über die
+     Bildmarke und alle Sektionen bis zur CTA-Überschrift. Der Volleyballer
+     selbst trägt die Linie bis zum Sammelpunkt (SVG-intern, .jjoin-line).
+     Top/Height setzt JS einmalig (Resize/Load); Fill & Leuchtpunkt laufen
+     per Scroll-Fokus – ein Mechanismus für die ganze Seite. -->
+<div class="rail" id="rail" aria-hidden="true">
+  <div class="rail-fill"></div>
+  <div class="rail-dot"></div>
+</div>
 
 <!-- ==================== WIE ICH DIR HELFE ==================== -->
 <section class="hilfe" id="hilfe">
   <div class="wrap">
-    <div class="section-head center">
+    <div class="section-head center rail-patch-holder">
       <p class="kicker center">Die Lösung</p>
       <h2>Wie ich dir helfe.</h2>
       <p class="sub">Vier Bausteine, die ineinandergreifen – zusammengestellt für deinen Körper, deine Beschwerden und dein Ziel.</p>
@@ -696,7 +717,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
 <!-- ==================== DER UNTERSCHIED ==================== -->
 <section class="vorteil" id="vorteil">
   <div class="wrap">
-    <div class="section-head center">
+    <div class="section-head center rail-patch-holder">
       <p class="kicker center">Der Unterschied</p>
       <h2>Warum dich dein Fitnessstudio als Volleyballer nicht versteht – ich schon.</h2>
     </div>
@@ -732,7 +753,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
 <!-- ==================== WACHSTUMSZYKLUS ==================== -->
 <section class="zyklus" id="zyklus">
   <div class="wrap">
-    <div class="section-head center">
+    <div class="section-head center rail-patch-holder">
       <p class="kicker center">Der Kreislauf</p>
       <h2>Der selbstverstärkende Wachstumszyklus.</h2>
       <p class="sub">Jede Verbesserung verstärkt die nächste – ein Kreislauf, der dich aufbaut, statt dich abzubauen.</p>
@@ -749,6 +770,10 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
           <path class="cyc-arc" d="M200 458 A215 215 0 0 1 242 276"/>
           <path class="cyc-arc" d="M242 276 A215 215 0 0 1 410 195"/>
         </g>
+        <!-- Lauf-Linie: opake Patches in Seitenfarbe hinter den Texten im
+             Diagramm-Zentrum – die Linie fädelt hinter Logo und oberem Label
+             hindurch, statt sie zu schneiden. Der untere Bogen bleibt frei. -->
+        <rect class="cyc-rail-patch" x="300" y="140" width="220" height="34"/>
         <g>
           <path class="chev" transform="translate(503 216) rotate(25.7)" d="M-7 -6 L5 0 L-7 6"/>
           <path class="chev" transform="translate(620 362) rotate(77.1)" d="M-7 -6 L5 0 L-7 6"/>
@@ -793,8 +818,10 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
           <circle class="cn-dot" cx="242" cy="276" r="3.5"/>
           <text class="cyc-label" x="222" y="283" text-anchor="end">Größere Freude</text>
         </g>
-        <!-- Zentrum: Bildmarke (dreht sich langsam), darunter Logo-Text & Slogan -->
+        <!-- Zentrum: rotierendes Logo mit opakem Patch dahinter – die Lauf-Linie
+             verläuft HINTER dem Patch und schneidet weder Logo noch Slogan -->
         <g class="cnode" style="transition-delay:1.3s">
+          <rect class="cyc-rail-patch" x="322" y="292" width="176" height="194" rx="97"/>
           <use class="core-logo" href="#vs-mark" x="374" y="306" width="72" height="72"/>
           <text class="cyc-logo" x="410" y="416" text-anchor="middle">VolleyballStark</text>
           <text class="cyc-slogan" x="410" y="462" text-anchor="middle">Freude am Spiel!</text>
@@ -815,7 +842,6 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
     </div>
   </div>
 </section>
-</div>
 
 <!-- ==================== ANGEBOTE ==================== -->
 <section class="offers-section" id="angebote">
@@ -916,7 +942,6 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
     </div>
   </div>
 </section>
-</div>
 
 <!-- ==================== NEWSLETTER ==================== -->
 <section class="newsletter" id="newsletter">
@@ -984,21 +1009,78 @@ document.getElementById('theme-toggle').addEventListener('click', ()=>{
   try{ localStorage.setItem('vs-theme', next); }catch(e){}
 });
 
-/* ---------- Linie bis zum Abschluss-CTA ---------- */
-const spine = document.getElementById('spine');
-const spineProg = document.getElementById('spine-prog');
-const spineTrack = spine.querySelector('.spine-track');
-function updateSpine(){
-  const head = document.querySelector('.cta-final h2');
-  const end = spine.getBoundingClientRect().top + scrollY;
-  const headY = head.getBoundingClientRect().top + scrollY;
-  spineTrack.style.height = Math.max(0, headY - end) + 'px';
-  const focus = innerHeight * 0.55;
-  const p = Math.min(Math.max((focus - spine.getBoundingClientRect().top) / Math.max(1, headY - end), 0), 1);
-  spineProg.style.height = (p * 100) + '%';
+/* ---------- DIE EINE LAUF-LINIE (Volleyballer → Bildmarke → CTA) ----------
+   Ein Mechanismus für die gesamte Strecke: Geometrie wird nur bei
+   load/resize/font-load neu gemessen (gecacht), Fill & Leuchtpunkt
+   folgen dem Scroll-Fokus über EINE rAF-gedrosselte Funktion.
+   Patches in Seitenfarbe (.rail-patch / .cyc-rail-patch) werden
+   automatisch hinter alle zentrierten Headlines und Tabellen gelegt. */
+const rail = document.getElementById('rail');
+const railFill = rail.querySelector('.rail-fill');
+const railDot = rail.querySelector('.rail-dot');
+
+/* Patches hinter zentrierte Headlines/Tabellen legen (verbirgt die Linie
+   hinter Text, ohne sie zu unterbrechen – gleiche Technik wie .center-block) */
+document.querySelectorAll('.rail-patch-holder').forEach(h => {
+  const p = document.createElement('div');
+  p.className = 'rail-patch';
+  h.appendChild(p);
+});
+const vsRows = document.querySelector('.vs-rows');
+if (vsRows) {
+  const p = document.createElement('div');
+  p.className = 'rail-patch';
+  vsRows.appendChild(p);
 }
-addEventListener('load', updateSpine);
-addEventListener('resize', updateSpine);
+
+/* Geometrie cachen: Linien-Start (Sammelpunkt am Fuß des Volleyballer-SVG)
+   und Linien-Ende (CTA-Überschrift) */
+let railTop = 0, railH = 0;
+function measureRail(){
+  if (!getComputedStyle(rail).display.includes('flex') && getComputedStyle(rail).display === 'none') return;
+  const playerSvg = document.querySelector('.player');
+  const head = document.querySelector('.cta-final h2');
+  const start = playerSvg.getBoundingClientRect();
+  const end = head.getBoundingClientRect();
+  railTop = start.bottom + scrollY;              // Sammelpunkt unter dem Volleyballer
+  railH = Math.max(0, (end.top + scrollY) - railTop);  // bis Oberkante CTA-Überschrift
+  rail.style.top = railTop + 'px';
+  rail.style.height = railH + 'px';
+}
+/* Fortschritt: Fill-Höhe + Leuchtpunkt, gedrosselt über rAF (Fallback: Timeout,
+   falls Frames ausbleiben – z. B. Hintergrund-Tab) */
+let railTick = false;
+function updateRail(){
+  railTick = false;
+  const focus = scrollY + innerHeight * 0.55;   /* absolute Fokuslinie im Dokument */
+  const p = Math.min(Math.max((focus - railTop) / Math.max(1, railH), 0), 1);
+  const y = p * railH;
+  railFill.style.height = y + 'px';
+  railDot.style.top = y + 'px';
+}
+function requestRail(){
+  if(railTick) return;
+  railTick = true;
+  requestAnimationFrame(updateRail);
+  setTimeout(updateRail, 32);   /* Fallback: setzt railTick zurück, idempotent */
+}
+function railChanged(){ requestRail(); measureRail(); requestRail(); }
+
+addEventListener('load', railChanged);
+addEventListener('resize', railChanged);
+addEventListener('scroll', requestRail, {passive:true});
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(railChanged);
+measureRail(); requestRail();
+
+/* Sicherheitsnetz: Falls scroll-Events einmal ausbleiben sollten, stellt ein
+   leichter IntersectionObserver-Herzschlag sicher, dass die Linie beim
+   Durchlaufen der Sektionen trotzdem aktualisiert wird. */
+if ('IntersectionObserver' in window){
+  const railIO = new IntersectionObserver(entries => {
+    if (entries.some(e => e.isIntersecting)) requestRail();
+  }, {rootMargin: '10px 0px'});
+  document.querySelectorAll('.hilfe, .why, .vorteil, .zyklus, .cta-final').forEach(s => railIO.observe(s));
+}
 
 /* ---------- Navigation ---------- */
 const nav = document.getElementById('nav');
@@ -1032,18 +1114,7 @@ const rowIO = new IntersectionObserver(entries=>{
 },{threshold:.3});
 document.querySelectorAll('.pill-row, .myth-row, .journey-end').forEach(el=> rowIO.observe(el));
 
-/* ---------- Fortschritts-Linie ---------- */
-const jBody = document.getElementById('journey-body');
-const jProg = document.getElementById('jprog');
-function updateLine(){
-  const r = jBody.getBoundingClientRect();
-  const focus = innerHeight * 0.55;
-  const p = Math.min(Math.max((focus - r.top) / r.height, 0), 1);
-  jProg.style.height = (p * 100) + '%';
-}
-addEventListener('scroll', ()=> requestAnimationFrame(updateLine), {passive:true});
-addEventListener('resize', ()=>{ updateLine(); updateSpine(); });
-updateLine();
+/* ---------- Fortschritts-Linie: siehe DIE EINE LAUF-LINIE oben ---------- */
 
 /* ---------- Zähler ---------- */
 document.querySelectorAll('[data-count]').forEach(el=>{
