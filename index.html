@@ -325,9 +325,11 @@ footer .logo-svg{height:38px}
 /* ============ ABSCHLUSS-CTA ============ */
 .cta-final{padding:110px 0 20px;text-align:center;position:relative}
 .cta-final h2{font-size:clamp(1.9rem,4vw,2.7rem);max-width:700px;margin:0 auto 16px;position:relative;padding:26px 34px;border:1px solid transparent;border-radius:18px;transition:border-color .8s}
-.cta-final h2.in{border-color:var(--accent-3);animation:ctalight 2.4s ease-in-out infinite .6s}
+/* Rahmen leuchtet erst, wenn der Leuchtpunkt der Lauf-Linie ankommt:
+   JS setzt .lit, sobald der Fortschritt die Headline erreicht (p >= 1). */
+.cta-final h2.lit{border-color:var(--accent-3);animation:ctalight 2.4s ease-in-out infinite .6s}
 @keyframes ctalight{0%,100%{box-shadow:0 0 14px var(--glow)}50%{box-shadow:0 0 40px var(--glow)}}
-@media (prefers-reduced-motion:reduce){.journey-end.active .node-ball,.cta-final h2.in{animation:none}}
+@media (prefers-reduced-motion:reduce){.journey-end.active .node-ball,.cta-final h2.lit{animation:none}}
 .cta-final p{color:var(--muted);margin-bottom:32px}
 .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 
@@ -1034,16 +1036,29 @@ if (vsRows) {
 }
 
 /* Geometrie cachen: Linien-Start (Sammelpunkt am Fuß des Volleyballer-SVG)
-   und Linien-Ende (CTA-Überschrift) */
-let railTop = 0, railH = 0;
+   und Linien-Ende (CTA-Überschrift).
+   - Player (SVG): getBoundingClientRect – SVG hat kein offsetTop, aber
+     auch keine Transform (Reveal betrifft es nicht).
+   - CTA-Überschrift (HTML): offsetTop-Aufstieg – ihre Reveal-Animation
+     (translateY 24px) verschiebt zwar das Box-Rechtek, aber NICHT die
+     Layout-Position. So endet die Linie immer exakt an der Rahmen-Oberkante,
+     egal wann gemessen wird. */
+let railTop = 0, railH = 0, railEnd = 0;
+const ctaHead = document.querySelector('.cta-final h2');
+function docTop(el){
+  let y = 0;
+  while (el && el !== document.body){
+    y += el.offsetTop;
+    el = el.offsetParent;
+  }
+  return y;
+}
 function measureRail(){
-  if (!getComputedStyle(rail).display.includes('flex') && getComputedStyle(rail).display === 'none') return;
   const playerSvg = document.querySelector('.player');
-  const head = document.querySelector('.cta-final h2');
-  const start = playerSvg.getBoundingClientRect();
-  const end = head.getBoundingClientRect();
-  railTop = start.bottom + scrollY;              // Sammelpunkt unter dem Volleyballer
-  railH = Math.max(0, (end.top + scrollY) - railTop);  // bis Oberkante CTA-Überschrift
+  railTop = playerSvg.getBoundingClientRect().bottom + scrollY;   // Sammelpunkt
+  railEnd = docTop(ctaHead);                                        // Rahmen-Oberkante (Layout)
+  railH = Math.max(0, railEnd - railTop);
+  if (getComputedStyle(rail).display === 'none') return;     // Mobile: nur Geometrie, kein Styling
   rail.style.top = railTop + 'px';
   rail.style.height = railH + 'px';
 }
@@ -1057,6 +1072,10 @@ function updateRail(){
   const y = p * railH;
   railFill.style.height = y + 'px';
   railDot.style.top = y + 'px';
+  /* Rahmen erhellt erst, wenn der Leuchtpunkt ankommt – d. h. wenn die
+     Fokuslinie die Rahmen-Oberkante erreicht. Auf Mobile (ohne Linie) gilt
+     dieselbe Ankunfts-Regel, damit der Moment dort nicht verloren geht. */
+  ctaHead.classList.toggle('lit', railEnd > 0 && focus >= railEnd);
 }
 function requestRail(){
   if(railTick) return;
