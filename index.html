@@ -188,7 +188,8 @@ footer .logo-svg{height:38px}
 .pill-row .dot{grid-column:2;grid-row:1;justify-self:center;width:11px;height:11px;border-radius:50%;background:var(--line);transition:background .4s,box-shadow .4s;z-index:2}
 .pill-row.active .pill{opacity:1;transform:none}
 .pill-row.active .pill::before{background:var(--accent-3)}
-.pill-row.active .dot{background:var(--accent);box-shadow:0 0 10px var(--glow)}
+.pill-row .dot{transition:background .5s,box-shadow .5s}
+.pill-row .dot.lit{background:var(--accent);box-shadow:0 0 10px var(--glow)}
 
 .center-block{position:relative;z-index:2;background:var(--bg);text-align:center;margin:0 auto}
 .problem{max-width:780px;padding:56px 20px;margin:44px auto}
@@ -205,7 +206,8 @@ footer .logo-svg{height:38px}
 .row-r .myth-card::before{right:100%}
 .myth-row.active .myth-card{opacity:1;transform:none}
 .myth-row.active .myth-card::before{background:var(--accent-3)}
-.myth-row.active .dot{background:var(--accent);box-shadow:0 0 10px var(--glow)}
+.myth-row .dot{transition:background .5s,box-shadow .5s}
+.myth-row .dot.lit{background:var(--accent);box-shadow:0 0 10px var(--glow)}
 .myth-card:hover{border-color:var(--accent-3)}
 .myth-tag{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);border:1px solid var(--warn);border-radius:999px;padding:4px 12px;margin-bottom:14px;opacity:.85}
 .myth-tag svg{width:12px;height:12px}
@@ -220,7 +222,11 @@ footer .logo-svg{height:38px}
 
 @media(max-width:720px){
   .pill-row,.myth-row{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:26px}
-  .pill-row .dot,.myth-row .dot{margin:0;order:-1}
+  /* Dot sitzt MITTIG AUF der Oberkante der Karte (halbe Dot-Höhe überlappen).
+     align-self/margin-top des Desktop-Grids müssen zurückgesetzt werden. */
+  .pill-row .dot,.myth-row .dot{margin:0;order:-1;position:relative;z-index:3;align-self:center}
+  .myth-row .dot{margin-top:0;margin-bottom:-20px}
+  .pill-row .dot{margin-bottom:-19.5px}   /* 14px gap + halbe Dot-Höhe zurück auf die Kante */
   .pill::before,.myth-card::before{display:none}
   .pill,.myth-card{justify-self:auto;max-width:none;width:100%}
 }
@@ -1058,6 +1064,7 @@ function measureRail(){
   railTop = playerSvg.getBoundingClientRect().bottom + scrollY;   // Sammelpunkt
   railEnd = docTop(ctaHead);                                        // Rahmen-Oberkante (Layout)
   railH = Math.max(0, railEnd - railTop);
+  cacheMarkers();
   if (getComputedStyle(rail).display === 'none') return;     // Mobile: nur Geometrie, kein Styling
   rail.style.top = railTop + 'px';
   rail.style.height = railH + 'px';
@@ -1065,6 +1072,19 @@ function measureRail(){
 /* Fortschritt: Fill-Höhe + Leuchtpunkt, gedrosselt über rAF (Fallback: Timeout,
    falls Frames ausbleiben – z. B. Hintergrund-Tab) */
 let railTick = false;
+/* Marker der Reise-Sektion: Dots leuchten erst, wenn die Fokuslinie sie
+   erreicht – dieselbe Höhe, an der auch der Leuchtpunkt der Linie sitzt.
+   Geometrie gecacht (nur bei measureRail neu), Prüfung pro Frame rein
+   aus Zahlen – kein Layout-Read im Scroll-Pfad. */
+const railMarkers = [];
+function cacheMarkers(){
+  railMarkers.length = 0;
+  document.querySelectorAll('.pill-row .dot, .myth-row .dot').forEach(dot => {
+    const row = dot.closest('.pill-row, .myth-row');
+    const r = row.getBoundingClientRect();
+    railMarkers.push({dot, y: r.top + scrollY + r.height / 2});
+  });
+}
 function updateRail(){
   railTick = false;
   const focus = scrollY + innerHeight * 0.55;   /* absolute Fokuslinie im Dokument */
@@ -1072,6 +1092,9 @@ function updateRail(){
   const y = p * railH;
   railFill.style.height = y + 'px';
   railDot.style.top = y + 'px';
+  /* Reise-Marker: leuchtet, sobald die Fokuslinie den Marker erreicht
+     (und bleibt an, solange man darunter ist – symmetrisch zum Zurückscrollen) */
+  for (const m of railMarkers) m.dot.classList.toggle('lit', focus >= m.y);
   /* Rahmen erhellt erst, wenn der Leuchtpunkt ankommt – d. h. wenn die
      Fokuslinie die Rahmen-Oberkante erreicht. Auf Mobile (ohne Linie) gilt
      dieselbe Ankunfts-Regel, damit der Moment dort nicht verloren geht. */
@@ -1127,7 +1150,13 @@ const io = new IntersectionObserver(entries=>{
 },{threshold:.15});
 document.querySelectorAll('.reveal, .cycle').forEach(el=> io.observe(el));
 
-/* ---------- Schmerzpunkte & Mythen ---------- */
+/* ---------- Schmerzpunkte & Mythen: Marker an der Fokuslinie ----------
+   Die Karten blenden nach wie vor per IntersectionObserver ein (.active),
+   aber der DOT leuchtet erst, wenn die Fokuslinie der Lauf-Linie ihn
+   erreicht – und verlischt wieder beim Zurückscrollen (symmetrisch zur
+   Linie, in jeder Ansicht inkl. Mobile). Der rowIO setzt dafür nur
+   die Grund-Sichtbarkeit; das Leuchten übernimmt updateRail() über
+   die gleiche Fokus-Höhe wie die Linie selbst. */
 const rowIO = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('active'); });
 },{threshold:.3});
