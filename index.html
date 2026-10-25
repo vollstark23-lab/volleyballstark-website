@@ -200,6 +200,12 @@ footer .logo-svg{height:38px}
 .problem{max-width:680px;padding:26px 20px;margin:44px auto 64px}
 .problem h2{font-size:clamp(1.5rem,3.1vw,2.3rem);font-weight:700;margin-top:14px}
 .myths-label{padding:6px 10px;font-size:.78rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+/* Label → erste Mythos-Karte: Der Patch ragt 8px unter die Textbox. Mit 0px
+   Abstand würde die Karte die untere Rahmenlinie abschneiden (Desktop-Grid:
+   Karten-Trajektorie beginnt auf Label-Unterkante). 48px margin = 40px Luft
+   zwischen Patch-Unterkante und Karten-Oberkante — gleiche Distanz wie
+   zwischen Problem-Kasten und Label (40px Patch-zu-Patch). */
+.myths-label{margin-bottom:48px}
 
 .myth-row{display:grid;grid-template-columns:1fr 72px 1fr;margin-bottom:30px}
 .myth-row .dot{grid-column:2;grid-row:1;justify-self:center;align-self:start;margin-top:54px;width:12px;height:12px;border-radius:50%;background:var(--line);transition:background .4s,box-shadow .4s;z-index:2}
