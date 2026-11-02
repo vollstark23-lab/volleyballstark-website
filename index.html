@@ -1285,42 +1285,42 @@ document.getElementById('year').textContent = new Date().getFullYear();
   addEventListener('resize', sizeCanvas);
 
   function step(){
-    // Startwinkel läuft langsam um den Kreis (Uhrzeigersinn wie die Bögen)
-    const a = -Math.PI / 2 + tick * 0.004;   // ~46s pro Umlauf: Komet ist ein einzelner Lichtpunkt, Rest bleibt dunkel
-    // Partikel bleibt AUF der Kreislinie: nur Tangentenbewegung, kein Abbiegen.
-    // Der „Schweif" entsteht rein durch nachlassendes life (Fading nach hinten).
-    // Nur alle ~45 Frames (~0.75s) ein neuer Komet -> dazwischen glow Zeit zum Abklingen
-    if (tick % 45 === 0) glow = 1;
+    // Startwinkel läuft kontinuierlich um den Kreis (wie vorher, ~15s/Umlauf)
+    const a = -Math.PI / 2 + tick * 0.012;
+    // Komet-Kopf hell, Schweif DahINTER auf der Linie: Partikel werden mit
+    // abnehmendem life gezeichnet -> Spur verblasst nach hinten, nie nach innen.
     particles.push({
       x: CX + Math.cos(a) * R,
       y: CY + Math.sin(a) * R,
       angle: a + Math.PI / 2,                  // Tangente
       speed: 0.9 + Math.random() * 0.35,
       life: 1,
-      decay: 0.03 + Math.random() * 0.02,      // kurzer Schweif (~0.5s) direkt hinter dem Komet
+      decay: 0.011 + Math.random() * 0.007,    // langer, sanfter Schweif (~1.5s)
       radius: 2.4 + Math.random() * 1.6
     });
     if (particles.length > 300) particles.splice(0, particles.length - 300);
   }
 
-  // dezente Rest-Illumination der Kreislinie hinter dem Licht (klingt langsam ab)
-  let glow = 0;   // 0..1, wie stark der Kreis gerade nachleuchtet
+  // Rest-Illumination der Kreislinie: Glow wird vom vorbeiziehenden Komet
+  // (life≈1 beim frischen Partikel) gesetzt und klingt danach langsam ab –
+  // die Linie leuchtet also nur kurz hinter dem Licht nach.
+  let glow = 0;
   function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
     ctx.scale(canvas.width / 820, canvas.height / 820);   // viewBox-Koordinaten
-    // Kreis-Grundlinie mit Glow-Faktor – Restwert fast unsichtbar (nur Hauch)
+    // Kreislinie: schmal (1.1px) und dunkel (Rest-Alpha 0.05); heller/dicker
+    // nur direkt hinter dem Komet via glow
     ctx.globalCompositeOperation = 'source-over';
-    ctx.strokeStyle = `rgba(${rgb},${(0.03 + glow * 0.55).toFixed(3)})`;
-    ctx.lineWidth = 1.1 + glow * 1.1;         // max ~2.2px – halb so dick wie der Komet
+    ctx.strokeStyle = `rgba(${rgb},${(0.05 + glow * 0.4).toFixed(3)})`;
+    ctx.lineWidth = 1.1 + glow * 0.9;         // max ~2px – deutlich schmaler als der Komet
     ctx.beginPath();
     ctx.arc(CX, CY, R, 0, Math.PI * 2);
     ctx.stroke();
-    // heller Kern am Kreis, solange das Licht aktiv ist
     if (glow > 0.01){
       ctx.globalCompositeOperation = 'lighter';
-      ctx.strokeStyle = `rgba(${rgb},${(glow * 0.9).toFixed(3)})`;
-      ctx.lineWidth = 2.2;                     // dünner als der Partikel-Kern (~3-4px)
+      ctx.strokeStyle = `rgba(${rgb},${(glow * 0.55).toFixed(3)})`;
+      ctx.lineWidth = 1.6;                     // Nachleucht-Kern, dünner als Komet
       ctx.beginPath();
       ctx.arc(CX, CY, R, 0, Math.PI * 2);
       ctx.stroke();
@@ -1333,16 +1333,19 @@ document.getElementById('year').textContent = new Date().getFullYear();
       p.life -= p.decay;
       if (p.life <= 0){ particles.splice(i, 1); continue; }
       const al = Math.max(p.life, 0);
-      // heller Kern auf der Linie
+      // frischer Komet-Kopf setzt den Kreis-Glow (Linie leuchtet kurz nach)
+      if (p.life > 0.95) glow = 1;
+      // Schweif: Kern schmaler und dunkler mit abnehmendem life – die Spur
+      // wird also nach hinten dünner/heller, nie breiter als der Kopf
       ctx.fillStyle = `rgba(${rgb},${(al * .95).toFixed(3)})`;
       ctx.beginPath();
       ctx.arc(p.x, p.y, Math.max(0.001, p.life * p.radius), 0, Math.PI * 2);
       ctx.fill();
-      // Funkeln direkt an der Linie (enger Umkreis, kein Abdriften nach innen)
-      ctx.fillStyle = `rgba(${rgb},${(al * .7).toFixed(3)})`;
-      const s = Math.random() * 1.3;
-      ctx.fillRect(p.x + (Math.random() - .5) * 14 * p.life,
-                   p.y + (Math.random() - .5) * 14 * p.life, s, s);
+      // Funkeln direkt an der Linie, enger mit abnehmendem life
+      ctx.fillStyle = `rgba(${rgb},${(al * .55 * p.life).toFixed(3)})`;
+      const s = Math.random() * 1.1 * p.life;
+      ctx.fillRect(p.x + (Math.random() - .5) * 10 * p.life,
+                   p.y + (Math.random() - .5) * 10 * p.life, s, s);
     }
     ctx.restore();
   }
@@ -1350,9 +1353,9 @@ document.getElementById('year').textContent = new Date().getFullYear();
   function loop(){
     if (!running) return;
     step(); draw(); tick++;
-    // Nach dem Draw langsam abklingen lassen: glow sinkt, bis der Komet
-    // (nächstes Partikel in step()) wieder vorbeikommt und ihn auf 1 setzt.
-    glow = Math.max(0, glow - 0.004);
+    // Glow klingt nach jedem Frame langsam ab – bis der Komet-Kopf (life>0.95)
+    // in draw() ihn wieder auf 1 setzt. So leuchtet die Linie nur kurz nach.
+    glow = Math.max(0, glow - 0.008);
     rafId = requestAnimationFrame(loop);
   }
   function start(){ if (running || reduced) return; running = true; rafId = requestAnimationFrame(loop); }
