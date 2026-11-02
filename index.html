@@ -140,7 +140,8 @@ html[data-theme="light"] .ic-moon{display:none}
 .logo{display:inline-flex;align-items:center}
 .logo-svg{height:33px;width:auto;display:block}
 footer .logo-svg{height:38px}
-.core-logo{transform-origin:410px 342px;animation:spin 40s linear infinite}
+/* Bildmarke im Zyklus dreht sich NICHT mehr (lenkte ab) */
+.core-logo{transform-origin:410px 342px;animation:none}
 
 /* ============ HERO ============ */
 .hero{padding:170px 0 30px;text-align:center}
@@ -171,7 +172,6 @@ footer .logo-svg{height:38px}
 .mkdot{fill:var(--accent)}
 .jjoin{fill:var(--accent-2)}
 .jjoin-line{stroke:var(--line);stroke-width:2.5}
-@keyframes flowmove{to{stroke-dashoffset:-48}}
 
 .journey-body{position:relative;max-width:1080px;margin:0 auto;padding:0 24px}
 /* Die Reise-Linie läuft jetzt als EIN Element (.rail) hinter dem gesamten
@@ -304,10 +304,18 @@ footer .logo-svg{height:38px}
 }
 
 /* ============ WACHSTUMSZYKLUS ============ */
-.zyklus{padding:110px 0 20px}
-.cycle{max-width:680px;margin:20px auto 0}
-.cycle svg{width:100%;height:auto;display:block}
-.cyc-arc{stroke:var(--arc);stroke-width:2;fill:none;stroke-dasharray:5 9;animation:flowmove 1.9s linear infinite}
+/* z-index:0 macht die Sektion zum eigenen Stacking-Kontext: das ::before-
+   Panel ( volle Seitenfarbe, weicher Verlauf) liegt damit ÜBER Netz
+   (z-index:-2), Seiten-Ambient (body::before, -1) und der Lauf-Linie
+   (.rail, -1) – im Zyklus-Bereich scheint nichts mehr durch. */
+.zyklus{position:relative;z-index:0;padding:110px 0 20px}
+.zyklus::before{content:"";position:absolute;inset:-24px -40px;z-index:-1;pointer-events:none;background:var(--bg)}
+.cycle{position:relative;max-width:680px;margin:20px auto 0}
+.cyc-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cycle svg{position:relative;width:100%;height:auto;display:block}
+/* dezente Spur statt gestrichelter Linie – das Licht läuft als Partikel
+   auf dem Canvas darunter (siehe JS-Block ZYKLUS-PARTIKEL) */
+.cyc-arc{stroke:var(--arc);stroke-width:1.5;fill:none;opacity:.38}
 .chev{stroke:var(--accent);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .cn-bg{fill:var(--card);stroke:var(--accent);stroke-width:2.5}
 .cn-dot{fill:var(--accent)}
@@ -434,7 +442,6 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
 #toast.show{opacity:1;transform:translate(-50%,0)}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
 .reveal.in{opacity:1;transform:none}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal,.pill,.myth-card,.cnode{opacity:1;transform:none}
@@ -795,6 +802,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
     </div>
 
     <div class="cycle" id="cycle">
+      <canvas class="cyc-canvas" id="cycCanvas" aria-hidden="true"></canvas>
       <svg viewBox="0 0 820 820" aria-label="Wachstumszyklus: Weniger Schmerzen führt über weniger Stress, bessere Bewegung, Koordination, Technik und Leistung zu größerer Freude am Spiel – und zurück.">
         <g>
           <path class="cyc-arc" d="M410 195 A215 215 0 0 1 578 276"/>
@@ -1237,6 +1245,102 @@ bindDemoForm('wait-form', 'wait-email', 'wait-success');
 bindDemoForm('news-form', 'news-email', 'news-success');
 
 document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- Zyklus-Partikel: funkelndes Licht, das im Kreis läuft ----------
+   Inspiriert von jackrugiles „Canvas Sparkly Circle Loader" (CodePen,
+   MIT-Lizenz): Ein Partikel pro Frame startet auf dem Kreis (Radius des
+   Bogens, Zentrum 410/410) und sprüht mit wachsender Geschwindigkeit nach
+   außen; Leben und Größe nehmen ab, Farbe = aktuelles --accent ( Grün in
+   beiden Themes), „lighter"-Composite für den Glow. Rein dekorativ; bei
+   prefers-reduced-motion oder fehlendem Canvas läuft nichts. */
+(() => {
+  const canvas = document.getElementById('cycCanvas');
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const CX = 410, CY = 410, R = 215;            // Kreisbogen des Zyklus (viewBox 820)
+  const particles = [];
+  let tick = 0, running = false, rafId = 0, dpr = 1;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function accentRGB(){                       // --accent als rgb()-Komponenten lesen
+    const c = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    const m = c.match(/rgba?\(([^)]+)\)/);
+    if (m) return m[1].split(',').slice(0,3).map(s => s.trim()).join(',');
+    const h = c.replace('#','');
+    return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)].join(',');
+  }
+  let rgb = accentRGB();
+  new MutationObserver(() => { rgb = accentRGB(); })
+    .observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+
+  function sizeCanvas(){
+    const r = canvas.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width  = Math.max(1, Math.round(r.width  * dpr));
+    canvas.height = Math.max(1, Math.round(r.height * dpr));
+  }
+  sizeCanvas();
+  addEventListener('resize', sizeCanvas);
+
+  function step(){
+    // Startwinkel läuft langsam um den Kreis (Uhrzeigersinn wie die Bögen)
+    const a = -Math.PI / 2 + tick * 0.012;
+    particles.push({
+      x: CX + Math.cos(a) * R,
+      y: CY + Math.sin(a) * R,
+      angle: a + Math.PI / 2,                  // Tangente
+      speed: 0.15,
+      accel: 0.045,
+      life: 1,
+      decay: 0.012 + Math.random() * 0.008,
+      radius: 2.2 + Math.random() * 1.6
+    });
+    if (particles.length > 260) particles.splice(0, particles.length - 260);
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.scale(canvas.width / 820, canvas.height / 820);   // viewBox-Koordinaten
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.speed += p.accel;
+      p.x += Math.cos(p.angle) * p.speed;
+      p.y += Math.sin(p.angle) * p.speed;
+      p.angle += 0.05;                          // leichter Bogen nach außen
+      p.accel *= 1.02;
+      p.life -= p.decay;
+      if (p.life <= 0){ particles.splice(i, 1); continue; }
+      const al = Math.max(p.life, 0);
+      // heller Kern
+      ctx.fillStyle = `rgba(${rgb},${(al * .95).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(0.001, p.life * p.radius), 0, Math.PI * 2);
+      ctx.fill();
+      // Funkeln: kleine Rechte im Umkreis,Radius schrumpft mit dem Leben
+      ctx.fillStyle = `rgba(${rgb},${(al * .8).toFixed(3)})`;
+      const s = Math.random() * 1.4;
+      ctx.fillRect(p.x + (Math.random() - .5) * 30 * p.life,
+                   p.y + (Math.random() - .5) * 30 * p.life, s, s);
+    }
+    ctx.restore();
+  }
+
+  function loop(){
+    if (!running) return;
+    step(); draw(); tick++;
+    rafId = requestAnimationFrame(loop);
+  }
+  function start(){ if (running || reduced) return; running = true; rafId = requestAnimationFrame(loop); }
+  function stop(){ running = false; cancelAnimationFrame(rafId); }
+
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(([e]) => { e.isIntersecting ? start() : stop(); }, {threshold: .05})
+      .observe(canvas);
+  } else start();
+  document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+})();
 </script>
 </body>
 </html>
