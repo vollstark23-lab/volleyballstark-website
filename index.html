@@ -1286,16 +1286,18 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
   function step(){
     // Startwinkel läuft langsam um den Kreis (Uhrzeigersinn wie die Bögen)
-    const a = -Math.PI / 2 + tick * 0.012;
+    const a = -Math.PI / 2 + tick * 0.004;   // ~46s pro Umlauf: Komet ist ein einzelner Lichtpunkt, Rest bleibt dunkel
     // Partikel bleibt AUF der Kreislinie: nur Tangentenbewegung, kein Abbiegen.
     // Der „Schweif" entsteht rein durch nachlassendes life (Fading nach hinten).
+    // Nur alle ~45 Frames (~0.75s) ein neuer Komet -> dazwischen glow Zeit zum Abklingen
+    if (tick % 45 === 0) glow = 1;
     particles.push({
       x: CX + Math.cos(a) * R,
       y: CY + Math.sin(a) * R,
       angle: a + Math.PI / 2,                  // Tangente
       speed: 0.9 + Math.random() * 0.35,
       life: 1,
-      decay: 0.011 + Math.random() * 0.007,
+      decay: 0.03 + Math.random() * 0.02,      // kurzer Schweif (~0.5s) direkt hinter dem Komet
       radius: 2.4 + Math.random() * 1.6
     });
     if (particles.length > 300) particles.splice(0, particles.length - 300);
@@ -1307,11 +1309,10 @@ document.getElementById('year').textContent = new Date().getFullYear();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
     ctx.scale(canvas.width / 820, canvas.height / 820);   // viewBox-Koordinaten
-    // Kreis-Grundlinie mit Glow-Faktor (zeichnet sich selbst bei glow=0 in Basisfarbe)
-    glow = Math.max(0, glow - 0.0022);        // langsames Abklingen
+    // Kreis-Grundlinie mit Glow-Faktor – Restwert fast unsichtbar (nur Hauch)
     ctx.globalCompositeOperation = 'source-over';
-    ctx.strokeStyle = `rgba(${rgb},${(0.16 + glow * 0.55).toFixed(3)})`;
-    ctx.lineWidth = 1.6 + glow * 2.6;
+    ctx.strokeStyle = `rgba(${rgb},${(0.03 + glow * 0.55).toFixed(3)})`;
+    ctx.lineWidth = 1.1 + glow * 1.1;         // max ~2.2px – halb so dick wie der Komet
     ctx.beginPath();
     ctx.arc(CX, CY, R, 0, Math.PI * 2);
     ctx.stroke();
@@ -1319,7 +1320,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     if (glow > 0.01){
       ctx.globalCompositeOperation = 'lighter';
       ctx.strokeStyle = `rgba(${rgb},${(glow * 0.9).toFixed(3)})`;
-      ctx.lineWidth = 3.2;
+      ctx.lineWidth = 2.2;                     // dünner als der Partikel-Kern (~3-4px)
       ctx.beginPath();
       ctx.arc(CX, CY, R, 0, Math.PI * 2);
       ctx.stroke();
@@ -1348,7 +1349,10 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
   function loop(){
     if (!running) return;
-    step(); glow = 1; draw(); tick++;          // Licht aktiv -> Kreis leuchtet mit
+    step(); draw(); tick++;
+    // Nach dem Draw langsam abklingen lassen: glow sinkt, bis der Komet
+    // (nächstes Partikel in step()) wieder vorbeikommt und ihn auf 1 setzt.
+    glow = Math.max(0, glow - 0.004);
     rafId = requestAnimationFrame(loop);
   }
   function start(){ if (running || reduced) return; running = true; rafId = requestAnimationFrame(loop); }
