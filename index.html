@@ -397,7 +397,7 @@ footer .logo-svg{height:38px}
 .input:focus{outline:none;border-color:var(--accent)}
 .side-form .btn{width:100%}
 .side-note{font-size:.78rem;color:var(--muted)}
-.booking-frame{width:100%;height:760px;border:1px solid var(--stroke);border-radius:12px;background:var(--bg-2)}
+.booking-frame{width:100%;height:760px;border:1px solid var(--stroke);border-radius:12px;background:var(--bg-2);overflow:hidden}
 @media(max-width:640px){.booking-frame{height:700px}}
 .success{display:none;align-items:center;gap:10px;color:var(--accent);font-weight:600;font-size:.95rem;padding:6px 0}
 @media(max-width:820px){.big-grid{grid-template-columns:1fr}}
@@ -693,7 +693,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
     <div class="section-head center rail-patch-holder">
       <p class="kicker center">Die Lösung</p>
       <h2>Wie ich dir helfe.</h2>
-      <p class="sub">Vier Bausteine, die ineinandergreifen – zusammengestellt für deinen Körper, deine Beschwerden und dein Ziel.</p>
+      <p class="sub">Vier Hauptstränge bilden das Wurzelwerk von VolleyballStark, die Basis für die Erinnerung deines Körpers an sein ursprüngliches Potential und für dein Ziel, es wieder auf's Feld zu bringen!</p>
     </div>
 
     <div class="panel reveal">
@@ -880,10 +880,9 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
 <section class="cta-final">
   <div class="wrap">
     <h2 class="reveal">Bereit, dein Potenzial wieder zu erwecken?</h2>
-    <p class="reveal">Der erste Schritt ist klein: ein Gespräch – oder die Warteliste für die Challenge.</p>
+    <p class="reveal">Der erste Schritt ist klein: ein Gespräch – und der Start von Comeback Strong!</p>
     <div class="cta-btns reveal">
       <a href="#angebote" class="btn btn-primary">Lass uns direkt loslegen <i data-lucide="arrow-right"></i></a>
-      <a href="#newsletter" class="btn btn-ghost">Bleib dran <i data-lucide="mail"></i></a>
     </div>
   </div>
 </section>
@@ -893,8 +892,8 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
   <div class="wrap">
     <div class="section-head">
       <p class="kicker">Deine Möglichkeiten</p>
-      <h2>Womit möchtest du starten?</h2>
-      <p class="sub">Vom 8-Wochen-Programm bis zur Warteliste für die Challenge – jeder Weg beginnt mit einem ersten Schritt.</p>
+      <h2>Starte hier mit Comeback Strong!</h2>
+      <p class="sub">Deinem 8-Wochen-Kickstart, um mit neuem Vertrauen und Freude auf's Feld zu gehen!</p>
     </div>
 
     <div class="big-panel reveal">
@@ -915,76 +914,14 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
         <div class="side-box">
           <h4>Erst analysieren, dann starten.</h4>
           <p>Buchen &amp; direkt loslegen: Wir schauen gemeinsam, wo du stehst – und ob Comeback Strong! der richtige Weg für dich ist.</p>
-          <iframe class="booking-frame" src="https://meet.brevo.com/volleyballstark/borderless?l=qanda-call" title="Terminbuchung: Analysegespräch über Brevo Meetings" loading="lazy" referrerpolicy="origin" allowfullscreen></iframe>
+          <iframe class="booking-frame" src="https://meet.brevo.com/volleyballstark/borderless?l=qanda-call" title="Terminbuchung: Analysegespräch über Brevo Meetings" loading="lazy" referrerpolicy="origin" allowfullscreen scrolling="no"></iframe>
           <p class="side-note">Lieber direkt schreiben? <a href="mailto:info@volleyballstark.de">info@volleyballstark.de</a></p>
         </div>
       </div>
     </div>
 
-    <div class="big-panel reveal">
-      <span class="badge">Warteliste offen</span>
-      <h3>VolleyballRockt! – die 21-Tage-Challenge</h3>
-      <div class="big-grid">
-        <div>
-          <p class="desc">21 Tage täglich dranbleiben: Bewegung neu erfahren, Verletzungsangst abbauen und erste spürbare Erfolge sammeln. Starttermin und alle Konditionen erscheinen auf der Challenge-Landingpage – die Warteliste erfährt alles zuerst.</p>
-          <ul class="feat-list">
-            <li><i data-lucide="check"></i><div>Tägliche E-Mail-Serie</div></li>
-            <li><i data-lucide="check"></i><div>1–2 Videolektionen pro Woche</div></li>
-            <li><i data-lucide="check"></i><div>Live-Calls am Anfang und am Ende</div></li>
-            <li><i data-lucide="check"></i><div>Varianten des „Rockings“ – für jedes Level</div></li>
-            <li><i data-lucide="check"></i><div>VIP: zusätzlich Community-Zugang &amp; Live-Co-Training</div></li>
-          </ul>
-        </div>
-        <div class="side-box">
-          <!-- ### PLATZHALTER: Dieses Demo-Formular später durch das echte Brevo-Wartelisten-Formular ersetzen ### -->
-          <h4>Sichere dir deinen Platz.</h4>
-          <p>Starttermin, Ablauf und alle Details – Wartelisten-Insider erfahren sie zuerst.</p>
-          <form class="side-form" id="wait-form" novalidate>
-            <input type="email" class="input" id="wait-email" placeholder="deine@email.de" autocomplete="email" aria-label="E-Mail-Adresse für die Warteliste">
-            <button type="submit" class="btn btn-primary">Auf die Warteliste <i data-lucide="mail"></i></button>
-          </form>
-          <p class="success" id="wait-success"><i data-lucide="check-circle-2"></i>Du bist auf der Liste! (Demo – Anbindung an Brevo folgt.)</p>
-          <p class="side-note">Kein Spam, jederzeit abmeldbar.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="offer-grid">
-      <div class="offer reveal">
-        <i data-lucide="video"></i>
-        <h3>Live-Workshops</h3>
-        <p>Online und interaktiv: tief einsteigen, live Fragen stellen.</p>
-        <ul>
-          <li><i data-lucide="check"></i>Konkrete Themen, kompakt aufbereitet</li>
-          <li><i data-lucide="check"></i>Live-Feedback und Korrektur</li>
-          <li><i data-lucide="check"></i>Sofort anwendbar für dein Training</li>
-        </ul>
-        <a href="#newsletter" class="btn btn-ghost" data-toast="Workshop-Termine folgen – in der Info-Liste erfährst du sie zuerst.">Termine folgen</a>
-      </div>
-      <div class="offer reveal">
-        <i data-lucide="users"></i>
-        <h3>Community</h3>
-        <p>Dauerhaft offen: der Ort, um dranzubleiben und sich auszutauschen.</p>
-        <ul>
-          <li><i data-lucide="check"></i>Austausch mit Gleichgesinnten</li>
-          <li><i data-lucide="check"></i>Regelmäßige Live-Co-Trainings</li>
-          <li><i data-lucide="check"></i>Motivation, die über den ersten Schub hinausgeht</li>
-        </ul>
-        <a href="#newsletter" class="btn btn-ghost" data-toast="Community-Details folgen – in der Info-Liste zuerst.">Details folgen</a>
-      </div>
-      <div class="offer reveal">
-        <span class="tag-plan">In Planung</span>
-        <i data-lucide="monitor-play"></i>
-        <h3>Online-Kurse</h3>
-        <p>Strukturierte Trainingsprogramme – ich arbeite sie aus, sobald klar ist, was Kunden im Coaching wirklich brauchen.</p>
-        <ul>
-          <li><i data-lucide="check"></i>Fokus: Prävention &amp; langfristige Leistungsfähigkeit</li>
-          <li><i data-lucide="check"></i>Videogeführt, Schritt für Schritt</li>
-          <li><i data-lucide="check"></i>Warteliste-Insider erfahren den Start zuerst</li>
-        </ul>
-        <a href="#newsletter" class="btn btn-ghost" data-toast="Kurs-Details folgen – trag dich in die Info-Liste ein, dann erfährst du es als Erster.">Details folgen</a>
-      </div>
-    </div>
+    <!-- Weitere Angebote (Challenge, Workshops, Community, Kurse) sind
+         zurückgestellt – Fokus liegt aktuell auf Comeback Strong! -->
   </div>
 </section>
 
@@ -1019,7 +956,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
       <div class="foot-col">
         <h4>Rechtliches</h4>
         <ul>
-          <li><a href="#" data-toast="Hier deine Impressumsseite verlinken (Pflicht in DE).">Impressum</a></li>
+          <li><a href="impressum.html">Impressum</a></li>
           <li><a href="#" data-toast="Hier deine Datenschutzseite verlinken (Pflicht, u. a. wegen Brevo & Mentortools).">Datenschutz</a></li>
           <li><a href="mailto:info@volleyballstark.de" data-toast="E-Mail-Adresse anpassen!">info@volleyballstark.de</a></li>
         </ul>
@@ -1034,7 +971,7 @@ footer{border-top:1px solid var(--stroke);padding:56px 0 30px;background:var(--b
     </div>
     <div class="foot-bottom">
       <span>© <span id="year">2025</span> VolleyballStark · Janosch Bloching</span>
-      <span>Volleyball ist kein generischer Sport. Dein Training auch nicht.</span>
+      <span>Volleyball ist kein generischer Sport. Dein Training sollte es auch nicht sein.</span>
     </div>
   </div>
 </footer>
