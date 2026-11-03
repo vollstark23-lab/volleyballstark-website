@@ -52,20 +52,22 @@ body{
   background:var(--bg); color:var(--ink);
   line-height:1.6;
   min-height:100vh;
-  /* dezentes Netz-Muster wie auf der Hauptseite */
-  background-image:
-    linear-gradient(var(--net-ink) 1px, transparent 1px),
-    linear-gradient(90deg, var(--net-ink) 1px, transparent 1px);
-  background-size:44px 44px;
-  background-position:center top;
   -webkit-font-smoothing:antialiased;
 }
-/* weicher Verlauf oben wie auf der Hauptseite */
+/* exakt derselbe Volleyball-Netz-Hintergrund wie auf index.html */
+.net-bg{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;opacity:var(--net-op,.32)}
+.net-svg{position:absolute;inset:-6% -12%;width:124%;height:112%;transform:rotate(-7deg) skewY(-9deg);transform-origin:center;animation:netdrift 46s linear infinite;will-change:transform}
+.net-svg .nmesh{fill:none;stroke:var(--net-ink);stroke-width:1.4}
+.net-svg .nband{fill:var(--net-band);opacity:.5}
+.net-svg .ncord{stroke:var(--net-band);stroke-width:3;opacity:.45}
+.net-shade{position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 42%,transparent 30%,var(--bg) 92%)}
+@keyframes netdrift{0%{transform:rotate(-7deg) skewY(-9deg) translateY(0)}100%{transform:rotate(-7deg) skewY(-9deg) translateY(-140px)}}
+@media (prefers-reduced-motion:reduce){.net-svg{transform:rotate(-7deg) skewY(-9deg);animation:none}}
+/* Ambient-Verlauf identisch zur Hauptseite */
 body::before{
-  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background:
-    radial-gradient(60% 40% at 50% -5%, var(--amb1), transparent 70%),
-    radial-gradient(40% 30% at 85% 10%, var(--amb2), transparent 70%);
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(1100px 500px at 85% -5%, var(--amb1), transparent 70%),
+             radial-gradient(900px 500px at 0% 105%, var(--amb2), transparent 70%);
 }
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 /* schlichte Kopfzeile mit Logo + Zurück-Link */
@@ -102,6 +104,22 @@ footer{border-top:1px solid var(--stroke);padding:26px 0 40px;color:var(--muted)
 </style>
 </head>
 <body>
+<div class="net-bg" aria-hidden="true">
+  <svg class="net-svg" viewBox="0 0 2240 1680" preserveAspectRatio="none">
+    <g class="nmesh">
+      <path d="M56 0V1680 M112 0V1680 M168 0V1680 M224 0V1680 M280 0V1680 M336 0V1680 M392 0V1680 M448 0V1680 M504 0V1680 M560 0V1680 M616 0V1680 M672 0V1680 M728 0V1680 M784 0V1680 M840 0V1680 M896 0V1680 M952 0V1680 M1008 0V1680 M1064 0V1680 M1120 0V1680 M1176 0V1680 M1232 0V1680 M1288 0V1680 M1344 0V1680 M1400 0V1680 M1456 0V1680 M1512 0V1680 M1568 0V1680 M1624 0V1680 M1680 0V1680 M1736 0V1680 M1792 0V1680 M1848 0V1680 M1904 0V1680 M1960 0V1680 M2016 0V1680 M2072 0V1680 M2128 0V1680 M2184 0V1680"/>
+      <path d="M0 56H2240 M0 112H2240 M0 168H2240 M0 224H2240 M0 280H2240 M0 336H2240 M0 392H2240 M0 448H2240 M0 504H2240 M0 560H2240 M0 616H2240 M0 672H2240 M0 728H2240 M0 784H2240 M0 840H2240 M0 896H2240 M0 952H2240 M0 1008H2240 M0 1064H2240 M0 1120H2240 M0 1176H2240 M0 1232H2240 M0 1288H2240 M0 1344H2240 M0 1400H2240 M0 1456H2240 M0 1512H2240 M0 1568H2240 M0 1624H2240"/>
+    </g>
+    <g class="ncord">
+      <line x1="0" y1="0" x2="2240" y2="0"/>
+      <line x1="0" y1="1680" x2="2240" y2="1680"/>
+    </g>
+    <rect class="nband" x="0" y="-16" width="2240" height="16"/>
+    <rect class="nband" x="0" y="1680" width="2240" height="16"/>
+  </svg>
+  <div class="net-shade"></div>
+</div>
+
 <header class="wrap topbar">
   <a class="logo" href="index.html" aria-label="Zurück zur Startseite">
     <svg class="logo-svg" viewBox="0 0 552.8 136.9" role="img" aria-label="VolleyballStark">
