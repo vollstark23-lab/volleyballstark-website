@@ -18,7 +18,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20102.9%20102.9%22%3E%3Ccircle%20cx=%2251.5%22%20cy=%2251.5%22%20r=%2251.2%22%20fill=%22%23003600%22/%3E%3Cpath%20fill=%22%23B4E1B4%22%20d=%22M73.9,69.8c-1.7,0-4.4-3.8-4.4-5.5c0-0.7,0.2-1.3,0.6-1.9c0.9-1.4,4.9-8.8,6-10.7c0.1-0.2,0.2-0.4,0.2-0.6%20c0-0.2-0.1-0.3-0.4-0.3c-4.2,0-13.4,8.2-13.4,14.1c0,5.8,7.3,12.8,7.3,21c0,6-4.8,8.6-10.3,8.6c-7.8,0-17.2-5-17.2-12%20c0-1.2,0.9-3.4,2.3-3.4c0.4,0,0.7,0.1,1.2,0.6c2.2,2.4,6.9,7.1,11.7,7.1c1.2,0,2.9-0.1,2.9-1.7c0-4-7.3-14.8-7.3-23.4%20c0-8.2,12.5-25.1,24.3-25.1c2.2,0,4.9,0.6,5.8,3.9c2.4,1.4,4.8,5.5,4.8,8.5c0,1.1-0.4,2.1-0.6,2.7c-0.6,0.9-6.4,10-12,17.2%20C74.8,69.5,74.3,69.8,73.9,69.8z%22/%3E%3Cpath%20fill=%22%23B4E1B4%22%20d=%22M13,75.1c0-0.5,0-1,0.1-1.6C15.8,54.1,26,37.7,30.2,15.7c0.7-2.6,3.6-3.3,5.7-3.3c3.5,0,10.4,2.9,10.4,7%20c0,1-0.6,1.8-1.1,2.5c-7.4,10-16.3,36.2-18.9,43.4c-0.1,0.3-0.1,0.4-0.1,0.6c0,0.5,0.2,0.7,0.6,0.7s0.9-0.2,1.3-0.6%20c8.8-11.4,28-43.8,36.5-55.6c0.9-1.8,2.9-2.4,4.7-2.4c4.1,0,10.4,3.9,10.4,8.8c0,1.1-0.5,1.9-1.5,2.8c-23.7,20.9-39.7,52-47.8,64.8%20c-1.7,2.7-3,3.8-4.3,3.8c-1.4,0-2.8-1.4-4.5-3.9C17,83.7,13,80.6,13,75.1z%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Khand:wght@600;700&family=Rajdhani:wght@600;700&family=Exo+2:ital,wght@0,600;0,800;1,800&display=swap" rel="stylesheet">
 <style>
 /* ============ THEMES ============ */
 :root, html[data-theme="dark"]{
@@ -94,6 +94,16 @@ body::before{
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 a{color:var(--accent);text-decoration:none}
 h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.15;letter-spacing:-.01em}
+
+/* ============ FONT-SWITCHER (nur Test-Branch) ============ */
+html[data-hfont="khand"] h1,html[data-hfont="khand"] h2,html[data-hfont="khand"] h3{font-family:'Khand',sans-serif;font-weight:700;line-height:1.2}
+html[data-hfont="rajdhani"] h1,html[data-hfont="rajdhani"] h2,html[data-hfont="rajdhani"] h3{font-family:'Rajdhani',sans-serif;font-weight:700;line-height:1.2}
+html[data-hfont="exo2"] h1,html[data-hfont="exo2"] h2,html[data-hfont="exo2"] h3{font-family:'Exo 2',sans-serif;font-weight:800;line-height:1.2}
+html[data-hfont="exo2"] h1 em{font-style:italic}
+.fontswitch{position:fixed;bottom:18px;left:18px;z-index:99;display:flex;gap:8px;background:var(--bg-2);border:1px solid var(--stroke);border-radius:999px;padding:8px 10px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.fontswitch button{border:1px solid var(--stroke);background:var(--card);color:var(--muted);font-size:.78rem;font-weight:600;padding:7px 14px;border-radius:999px;cursor:pointer;font-family:inherit;transition:all .2s}
+.fontswitch button.on{background:var(--accent);color:var(--btn-ink);border-color:var(--accent)}
+.fontswitch .fs-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);align-self:center;padding:0 6px}
 section{scroll-margin-top:90px}
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 svg.lucide{flex-shrink:0}
@@ -1079,6 +1089,39 @@ bindDemoForm('wait-form', 'wait-email', 'wait-success');
 bindDemoForm('news-form', 'news-email', 'news-success');
 
 document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<div class="fontswitch" id="fontswitch">
+  <span class="fs-label">Headline-Font:</span>
+  <button type="button" data-hf="default" class="on">Bricolage (aktuell)</button>
+  <button type="button" data-hf="khand">Khand</button>
+  <button type="button" data-hf="rajdhani">Rajdhani</button>
+  <button type="button" data-hf="exo2">Exo 2</button>
+  <button type="button" id="fshide" style="padding:7px 10px">×</button>
+</div>
+<script>
+(function(){
+  var root = document.documentElement;
+  var saved = null;
+  try{ saved = sessionStorage.getItem('vs-hfont'); }catch(e){}
+  if(saved){ root.dataset.hfont = saved; sync(saved); }
+  function sync(active){
+    document.querySelectorAll('#fontswitch button[data-hf]').forEach(function(b){
+      b.classList.toggle('on', b.dataset.hf === (active || 'default'));
+    });
+  }
+  document.querySelectorAll('#fontswitch button[data-hf]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var hf = b.dataset.hf;
+      if(hf === 'default'){ delete root.dataset.hfont; }
+      else{ root.dataset.hfont = hf; }
+      try{ sessionStorage.setItem('vs-hfont', hf === 'default' ? '' : hf); }catch(e){}
+      sync(hf);
+    });
+  });
+  document.getElementById('fshide').addEventListener('click', function(){
+    document.getElementById('fontswitch').style.display = 'none';
+  });
+})();
 </script>
 </body>
 </html>
