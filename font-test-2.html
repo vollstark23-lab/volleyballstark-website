@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font-Test Runde 2: Kondensiert-athletisch &amp; Eckig-technisch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=Chakra+Petch:wght@700&family=Big+Shoulders+Stencil+Display:wght@800&family=Barlow+Condensed:wght@800&family=Saira+Condensed:wght@800&family=Teko:wght@700&family=Khand:wght@700&family=Rajdhani:wght@700&family=Exo+2:ital,wght@0,800;1,800&family=Russo+One&family=Jura:wght@700&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#081410; --bg-2:#0b1c14; --card:#0e2318; --stroke:rgba(94,215,141,.14);
+    --accent:#4ade80; --accent-3:#16a34a; --ink:#eaf5ed; --muted:#a3bfae;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:system-ui,sans-serif;padding:48px 24px 80px}
+  .intro{max-width:900px;margin:0 auto 40px;text-align:center}
+  .intro h1{font-size:1.4rem;margin-bottom:8px}
+  .intro p{color:var(--muted);font-size:.95rem}
+  .specimen{max-width:900px;margin:0 auto 36px;background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:36px 32px;position:relative;overflow:hidden}
+  .specimen.ref{border-color:var(--accent-3)}
+  .tag{position:absolute;top:14px;right:18px;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--stroke);border-radius:999px;padding:4px 12px}
+  .specimen.ref .tag{color:var(--accent);border-color:var(--accent-3)}
+  .label{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .label::before{content:"";width:26px;height:2px;background:var(--accent-3)}
+  .headline{font-size:clamp(1.7rem,4.2vw,2.9rem);line-height:1.15;letter-spacing:-.01em}
+  .headline em{font-style:italic;color:var(--accent)}
+  .note{margin-top:16px;font-size:.85rem;color:var(--muted)}
+  .group{max-width:900px;margin:44px auto 20px;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--stroke);padding-bottom:10px}
+  .f-bs .headline{font-family:'Big Shoulders Display',sans-serif;font-weight:800}
+  .f-chakra .headline{font-family:'Chakra Petch',sans-serif;font-weight:700}
+  .f-bsstencil .headline{font-family:'Big Shoulders Stencil Display',sans-serif;font-weight:800}
+  .f-barlow .headline{font-family:'Barlow Condensed',sans-serif;font-weight:800}
+  .f-saira .headline{font-family:'Saira Condensed',sans-serif;font-weight:800}
+  .f-teko .headline{font-family:'Teko',sans-serif;font-weight:700}
+  .f-khand .headline{font-family:'Khand',sans-serif;font-weight:700}
+  .f-rajdhani .headline{font-family:'Rajdhani',sans-serif;font-weight:700}
+  .f-exo2 .headline{font-family:'Exo 2',sans-serif;font-weight:800}
+  .f-russo .headline{font-family:'Russo One',sans-serif;font-weight:400}
+  .f-jura .headline{font-family:'Jura',sans-serif;font-weight:700}
+  .f-sairastencil .headline{font-family:'Saira Stencil One',sans-serif;font-weight:400}
+</style>
+</head>
+<body>
+  <div class="intro">
+    <h1>Font-Test · Runde 2</h1>
+    <p>Richtung 1: kondensiert-athletisch (Big-Shoulders-Familie) · Richtung 2: eckig-technisch (Chakra-Petch-Familie). Deine beiden Favoriten stehen oben als Referenz.</p>
+  </div>
+
+  <div class="group">Referenz · Deine Favoriten aus Runde 1</div>
+
+  <div class="specimen ref f-bs">
+    <div class="tag">Favorit 1</div>
+    <div class="label">01 · Big Shoulders Display 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Dein Favorit – als Vergleichsbasis für alles darunter.</div>
+  </div>
+
+  <div class="specimen ref f-chakra">
+    <div class="tag">Favorit 2</div>
+    <div class="label">02 · Chakra Petch 700</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Dein Favorit – als Vergleichsbasis für alles darunter.</div>
+  </div>
+
+  <div class="group">Richtung 1 · Kondensiert-athletisch (wie Big Shoulders)</div>
+
+  <div class="specimen f-bsstencil">
+    <div class="tag">Schablonen-Schnitt</div>
+    <div class="label">03 · Big Shoulders Stencil 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Direkter Bruder deines Favoriten – gleiche Proportionen, aber mit Schablonen-Brüchen. Noch markanter, sehr „Athletik-Brand".</div>
+  </div>
+
+  <div class="specimen f-barlow">
+    <div class="tag">Profi-Sport</div>
+    <div class="label">04 · Barlow Condensed 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Aus dem Autobau-Design, extrem sauber und professionell. Wirkt wie Trikot-Nummern &amp; Stadion-Banden.</div>
+  </div>
+
+  <div class="specimen f-saira">
+    <div class="tag">Trikot-Feeling</div>
+    <div class="label">05 · Saira Condensed 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Sehr sportlich, leicht technisch, leicht kantig – Hybrid aus deinen beiden Favoriten-Richtungen.</div>
+  </div>
+
+  <div class="specimen f-teko">
+    <div class="tag">Schmal &amp; schnell</div>
+    <div class="label">06 · Teko 700</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Extrem kondensiert – wirkt, als würde der Text sprinten. Braucht gute Zeilenhöhe, aber sehr dynamisch und selten.</div>
+  </div>
+
+  <div class="specimen f-khand">
+    <div class="tag">Kantig-kondensiert</div>
+    <div class="label">07 · Khand 700</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Kondensiert MIT Ecken – die Brücke zwischen Big Shoulders und Chakra Petch. Sehr seltener Gast im Web.</div>
+  </div>
+
+  <div class="group">Richtung 2 · Eckig-technisch (wie Chakra Petch)</div>
+
+  <div class="specimen f-rajdhani">
+    <div class="tag">Technisch-sportlich</div>
+    <div class="label">08 · Rajdhani 700</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Wie Chakra Petch, aber runder und erwachsener – Sport-Timing-Board-Anmutung, gut lesbar.</div>
+  </div>
+
+  <div class="specimen f-exo2">
+    <div class="tag">Sport-TV-Grafik</div>
+    <div class="label">09 · Exo 2 · 800 italic</div>
+    <div class="headline" style="font-style:italic">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Variable Breite + Kursive = Bewegung pur. Kommt aus der Sport-Übertragungs-Grafik (Formel 1, Fußball-TV).</div>
+  </div>
+
+  <div class="specimen f-russo">
+    <div class="tag">Kraftvoll-technisch</div>
+    <div class="label">10 · Russo One</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Breit, massiv, technisch – wie eine Startnummer aus Carbon. Nur ein Gewicht, sehr eigenständig.</div>
+  </div>
+
+  <div class="specimen f-jura">
+    <div class="tag">Leicht &amp; kantig</div>
+    <div class="label">11 · Jura 700</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Kantig, aber schlanker und luftiger als Chakra Petch – eher High-Tech als Esports.</div>
+  </div>
+
+  <div class="specimen f-sairastencil">
+    <div class="tag">Schablone + Technik</div>
+    <div class="label">12 · Saira Stencil One</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Saira-Formen mit Schablonen-Brüchen – der mutigste Kandidat dieser Runde. Markant, aber polarisierend.</div>
+  </div>
+
+  <div class="intro" style="margin-top:48px">
+    <p><strong>Tipp:</strong> Auch hier gilt – Fenster schmal ziehen, um Handy-Verhalten zu prüfen. Und: 2× mit den Augen abstand nehmen und aus 2 Metern auf den Monitor schauen – so wirkt die Headline später „im Vorbeigehen".</p>
+  </div>
+</body>
+</html>
