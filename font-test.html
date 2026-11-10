@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font-Test: Headline-Varianten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Bangers&family=Anton&family=Big+Shoulders+Display:wght@700;800&family=Syne:wght@700;800&family=Unbounded:wght@700;800&family=Passion+One:wght@700;900&family=Archivo:wdth,wght@62..125,800&family=Space+Grotesk:wght@700&family=Kanit:ital,wght@0,800;1,800&family=Chakra+Petch:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#081410; --bg-2:#0b1c14; --card:#0e2318; --stroke:rgba(94,215,141,.14);
+    --accent:#4ade80; --accent-3:#16a34a; --ink:#eaf5ed; --muted:#a3bfae;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:system-ui,sans-serif;padding:48px 24px 80px}
+  .intro{max-width:900px;margin:0 auto 40px;text-align:center}
+  .intro h1{font-size:1.4rem;margin-bottom:8px}
+  .intro p{color:var(--muted);font-size:.95rem}
+  .specimen{max-width:900px;margin:0 auto 36px;background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:36px 32px;position:relative;overflow:hidden}
+  .tag{position:absolute;top:14px;right:18px;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--stroke);border-radius:999px;padding:4px 12px}
+  .label{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .label::before{content:"";width:26px;height:2px;background:var(--accent-3)}
+  .headline{font-size:clamp(1.7rem,4.2vw,2.9rem);line-height:1.15;letter-spacing:-.01em}
+  .headline em{font-style:italic;color:var(--accent)}
+  .note{margin-top:16px;font-size:.85rem;color:var(--muted)}
+  /* Font-Zuweisungen */
+  .f-bricolage .headline{font-family:'Bricolage Grotesque',sans-serif;font-weight:800}
+  .f-bangers .headline{font-family:'Bangers',cursive;font-weight:400;letter-spacing:.01em}
+  .f-anton .headline{font-family:'Anton',sans-serif;font-weight:400;letter-spacing:.005em}
+  .f-bigshoulders .headline{font-family:'Big Shoulders Display',sans-serif;font-weight:800}
+  .f-syne .headline{font-family:'Syne',sans-serif;font-weight:800}
+  .f-unbounded .headline{font-family:'Unbounded',sans-serif;font-weight:800}
+  .f-passion .headline{font-family:'Passion One',sans-serif;font-weight:900}
+  .f-archivo .headline{font-family:'Archivo',sans-serif;font-weight:800;font-stretch:118%}
+  .f-spacegrotesk .headline{font-family:'Space Grotesk',sans-serif;font-weight:700}
+  .f-kanit .headline{font-family:'Kanit',sans-serif;font-weight:800}
+  .f-chakra .headline{font-family:'Chakra Petch',sans-serif;font-weight:700}
+</style>
+</head>
+<body>
+  <div class="intro">
+    <h1>Font-Test: Headline-Varianten</h1>
+    <p>„Hör auf, deine Leistungsfähigkeit durch <em style="color:var(--accent)">Faszienlecks</em> zu verlieren." in 11 Kandidaten – Website-Farben 1:1 (Dark Theme), gleiche Größe wie der echte Hero.</p>
+  </div>
+
+  <div class="specimen f-bricolage">
+    <div class="tag">Aktueller Stand</div>
+    <div class="label">01 · Bricolage Grotesque 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Dein aktueller Font. Schön, aber unter KI-generierten Seiten sehr verbreitet.</div>
+  </div>
+
+  <div class="specimen f-bangers">
+    <div class="tag">Comic</div>
+    <div class="label">02 · Bangers</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Dein Vorschlag – sehr plakativ, Comic-Stil. Kraftvoll, aber schnell „bastelig" und auch häufig im Web.</div>
+  </div>
+
+  <div class="specimen f-anton">
+    <div class="tag">Klassiker</div>
+    <div class="label">03 · Anton</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Kondensierte Kraft-Typo (Plakat-Stil). Sportlich, direkt – aber ebenfalls weit verbreitet.</div>
+  </div>
+
+  <div class="specimen f-bigshoulders">
+    <div class="tag">Sportlich</div>
+    <div class="label">04 · Big Shoulders Display 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Schmal, athletisch, an Sporttrikots erinnernd. Noch relativ frisch im Web – guter Kompromiss aus Dynamik und Eigenständigkeit.</div>
+  </div>
+
+  <div class="specimen f-syne">
+    <div class="tag">Eigenständig</div>
+    <div class="label">05 · Syne 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Ausdrucksstark, leicht verspielt, sehr eigenständig. Kommt aus der Kunst-/Designszene, nicht aus dem KI-Standardrepertoire.</div>
+  </div>
+
+  <div class="specimen f-unbounded">
+    <div class="tag">Eigenständig</div>
+    <div class="label">06 · Unbounded 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Breit, modern, sehr markant. Fordert viel Platz – sticht garantiert aus der Masse heraus, polarisiert aber.</div>
+  </div>
+
+  <div class="specimen f-passion">
+    <div class="tag">Sportlich</div>
+    <div class="label">07 · Passion One 900</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Kondensiert &amp; warm, sportliche Anmutung, deutlich seltener im Web als Anton/Bebas.</div>
+  </div>
+
+  <div class="specimen f-archivo">
+    <div class="tag">Sportlich</div>
+    <div class="label">08 · Archivo Expanded 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Grotesk in Breitstellung – wirkt wie Trikot-Beschriftung. Dynamisch, professionell, nicht plakativ.</div>
+  </div>
+
+  <div class="specimen f-spacegrotesk">
+    <div class="tag">Modern</div>
+    <div class="label">09 · Space Grotesk 700</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Technisch-modern, ruhig. Eher „Produkt" als „Sport" – populär bei Startups.</div>
+  </div>
+
+  <div class="specimen f-kanit">
+    <div class="tag">Dynamisch</div>
+    <div class="label">10 · Kanit 800</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Leichte Schrägstellung in den Formen – wirkt wie Bewegung im Stand. Sportlich-dynamisch, in DE selten.</div>
+  </div>
+
+  <div class="specimen f-chakra">
+    <div class="tag">Technisch</div>
+    <div class="label">11 · Chakra Petch 700</div>
+    <div class="headline">Hör auf, deine Leistungsfähigkeit durch <em>Faszienlecks</em> zu verlieren.</div>
+    <div class="note">Ecken &amp; Kanten, Esports-Anmutung. Sehr dynamisch, aber eher Gaming als Volleyball.</div>
+  </div>
+
+  <div class="intro" style="margin-top:48px">
+    <p><strong>Tipp:</strong> Verkleinere das Browserfenster mal auf Handy-Breite – die Headlines skalieren wie im echten Hero.</p>
+  </div>
+</body>
+</html>
